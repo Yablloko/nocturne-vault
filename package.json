@@ -1,0 +1,48 @@
+{
+  "name": "nocturne-vault",
+  "version": "0.3.1",
+  "description": "Полностью локальное зашифрованное хранилище для Windows",
+  "author": "Nocturne",
+  "main": "src/main.js",
+  "type": "commonjs",
+  "scripts": {
+    "build:quick": "esbuild src/quick/quick.jsx --bundle --outfile=src/quick/quick.bundle.js --format=iife --platform=browser --minify",
+    "start": "pnpm build:quick && electron .",
+    "dist:win": "pnpm build:quick && electron-builder --win nsis",
+    "test": "node --test tests/*.test.js",
+    "check": "pnpm build:quick && node --check src/main.js && node --check src/preload.js && node --check src/quick/preload.js && node --check src/services/vault-service.js && node --check src/services/activity-service.js && node --check src/services/media-range.js && node --check src/services/legacy-temp-cleanup.js && node --check src/services/otp-service.js && node --check src/renderer/app.js"
+  },
+  "dependencies": {
+    "jsqr": "https://codeload.github.com/cozmo/jsQR/tar.gz/master",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  },
+  "devDependencies": {
+    "electron": "^37.2.6",
+    "electron-builder": "^26.0.12",
+    "esbuild": "^0.25.9"
+  },
+  "build": {
+    "appId": "com.nocturne.vault",
+    "productName": "Nocturne Vault",
+    "artifactName": "Nocturne-Vault-Setup-${version}.${ext}",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "win": {
+      "icon": "assets/nocturne.ico",
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}

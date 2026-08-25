@@ -1,0 +1,47 @@
+const { contextBridge, ipcRenderer } = require('electron');
+
+function invoke(channel, payload) {
+  return ipcRenderer.invoke(channel, payload);
+}
+
+contextBridge.exposeInMainWorld('nocturne', {
+  bootstrap: () => invoke('app:bootstrap'),
+  createVault: (password) => invoke('vault:create', password),
+  unlock: (password) => invoke('vault:unlock', password),
+  recover: (key) => invoke('vault:recover', key),
+  quickUnlock: (mode, credential) => invoke('vault:quick-unlock', { mode, credential }),
+  lock: () => invoke('vault:lock'),
+  snapshot: () => invoke('vault:snapshot'),
+  saveEntry: (entry) => invoke('vault:save-entry', entry),
+  deleteEntry: (id) => invoke('vault:delete-entry', id),
+  saveNote: (note) => invoke('vault:save-note', note),
+  deleteNote: (id) => invoke('vault:delete-note', id),
+  saveOtp: (entry) => invoke('vault:save-otp', entry),
+  deleteOtp: (id) => invoke('vault:delete-otp', id),
+  otpCodes: () => invoke('vault:otp-codes'),
+  importOtpUri: (uri) => invoke('vault:import-otp-uri', uri),
+  importOtpClipboard: () => invoke('vault:import-otp-clipboard'),
+  importOtpQr: () => invoke('vault:import-otp-qr'),
+  importNotePhotos: (id) => invoke('vault:import-note-photos', id),
+  addFolder: (name) => invoke('vault:add-folder', name),
+  saveSettings: (settings) => invoke('vault:save-settings', settings),
+  verifyMasterPassword: (password) => invoke('vault:verify-master-password', password),
+  configureQuickUnlock: (mode, credential, currentPassword) => invoke('vault:quick-configure', { mode, credential, currentPassword }),
+  changeMasterPassword: (currentPassword, newPassword) => invoke('vault:change-master-password', { currentPassword, newPassword }),
+  destroyVault: () => invoke('vault:destroy'),
+  importMedia: () => invoke('vault:import-media'),
+  importDocuments: () => invoke('vault:import-documents'),
+  importNoteFromClipboard: (id) => invoke('vault:import-note-clipboard', id),
+  deleteMedia: (id) => invoke('vault:delete-media', id),
+  renameMedia: (id, name) => invoke('vault:rename-media', { id, name }),
+  saveMedia: (id) => invoke('vault:save-media', id),
+  previewDocument: (id) => invoke('vault:preview-document', id),
+  copyMedia: (id) => invoke('vault:copy-media', id),
+  saveRecoveryKey: (key) => invoke('vault:save-recovery-key', key),
+  copySecurely: (text, clearAfterSeconds) => invoke('clipboard:write', { text, clearAfterSeconds }),
+  minimize: () => invoke('window:minimize'),
+  maximize: () => invoke('window:maximize'),
+  close: () => invoke('window:close'),
+  onLocked: (callback) => ipcRenderer.on('vault:locked', (_event, data) => callback(data)),
+  onWiped: (callback) => ipcRenderer.on('vault:wiped', () => callback()),
+});

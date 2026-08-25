@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' vaultmedia: data:; media-src 'self' vaultmedia:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Nocturne Vault</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="titlebar">
+    <div class="titlebar__drag">
+      <span class="titlebar__mark" aria-hidden="true"></span>
+      <span>Nocturne</span>
+    </div>
+    <div class="window-controls">
+      <button type="button" data-window="minimize" aria-label="Свернуть">—</button>
+      <button type="button" data-window="maximize" aria-label="Развернуть">□</button>
+      <button type="button" class="window-controls__close" data-window="close" aria-label="Закрыть">×</button>
+    </div>
+  </header>
+
+  <main id="app" aria-live="polite"></main>
+
+  <dialog id="entry-dialog" class="dialog dialog--wide">
+    <form id="entry-form" method="dialog">
+      <div class="dialog__header">
+        <div>
+          <p class="eyebrow">Запись</p>
+          <h2 id="entry-dialog-title">Новый пароль</h2>
+        </div>
+        <button type="button" class="icon-button" data-close-dialog="entry-dialog" aria-label="Закрыть">×</button>
+      </div>
+      <input type="hidden" name="id">
+      <div class="form-grid">
+        <label class="field field--full"><span>Название</span><input name="title" required maxlength="120" autocomplete="off" placeholder="Например, Почта"></label>
+        <label class="field"><span>Логин</span><input name="username" maxlength="300" autocomplete="off" placeholder="name@example.com"></label>
+        <label class="field"><span>Папка</span><select name="folderId"></select></label>
+        <label class="field field--full">
+          <span>Пароль</span>
+          <div class="field-action"><input name="password" type="password" maxlength="1000" autocomplete="new-password"><button type="button" data-action="toggle-entry-password">Показать</button><button type="button" data-action="generate-password">Создать</button></div>
+        </label>
+        <label class="field field--full entry-current-password" hidden><span>Текущий пароль</span><input name="currentPassword" type="password" maxlength="1000" autocomplete="off" placeholder="Нужен только при изменении пароля"></label>
+        <label class="field field--full"><span>Сайт</span><input name="url" maxlength="1000" autocomplete="off" placeholder="https://"></label>
+        <label class="field field--full"><span>Заметка</span><textarea name="notes" maxlength="10000" rows="4" placeholder="Дополнительные сведения"></textarea></label>
+      </div>
+      <div class="dialog__footer">
+        <button type="button" class="button button--ghost" data-close-dialog="entry-dialog">Отмена</button>
+        <button type="submit" class="button button--primary">Сохранить</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="note-dialog" class="dialog dialog--wide">
+    <form id="note-form" method="dialog">
+      <div class="dialog__header">
+        <div><p class="eyebrow">Заметка</p><h2 id="note-dialog-title">Новая заметка</h2></div>
+        <button type="button" class="icon-button" data-close-dialog="note-dialog" aria-label="Закрыть">×</button>
+      </div>
+      <input type="hidden" name="id">
+      <label class="field"><span>Название</span><input name="title" required maxlength="160" autocomplete="off" placeholder="О чём эта заметка"></label>
+      <label class="field"><span>Текст</span><textarea name="body" maxlength="100000" rows="12" placeholder="Пишите без форматирования — содержимое будет зашифровано вместе с контейнером"></textarea></label>
+      <div class="dialog__footer"><button type="button" class="button button--ghost" data-close-dialog="note-dialog">Отмена</button><button type="submit" class="button button--primary">Сохранить</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="simple-dialog" class="dialog">
+    <div id="simple-dialog-content"></div>
+  </dialog>
+
+  <dialog id="media-dialog" class="dialog dialog--media">
+    <button type="button" class="media-close" data-close-dialog="media-dialog" aria-label="Закрыть">×</button>
+    <div id="media-dialog-content"></div>
+  </dialog>
+
+  <div id="toast-region" class="toast-region" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
