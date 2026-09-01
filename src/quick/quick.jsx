@@ -1,10 +1,57 @@
 const React = require('react');
 const { createRoot } = require('react-dom/client');
-const { useEffect, useMemo, useState } = React;
+const { useEffect, useMemo, useRef, useState } = React;
 
 const api = window.nocturneQuick;
 const call = async (promise) => { const result = await promise; if (!result?.ok) throw new Error(result?.error || 'UNKNOWN'); return result.data; };
-const time = (value) => new Intl.DateTimeFormat('ru', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' }).format(new Date(value));
+let quickPreferences = { locale: 'ru', theme: 'light' };
+const QUICK_EN = new Map(Object.entries({
+  'Буфер': 'Clipboard', 'Буфер обмена': 'Clipboard', 'Скриншоты': 'Screenshots', 'Заметки': 'Notes', 'Пароли': 'Passwords', 'Коды': 'Codes', 'Коды доступа': 'Access codes', 'Документы': 'Documents',
+  'Открыть': 'Open', 'Очистить всё': 'Clear all', 'Скопировать': 'Copy', 'Удалить': 'Delete', 'Сохранить': 'Save', 'Сохранить на ПК': 'Save to PC', 'Назад': 'Back',
+  'Закрытый раздел': 'Locked section', 'Быстрый вход': 'Quick sign-in', 'Введите PIN': 'Enter PIN', 'Введите мастер-пароль': 'Enter master password', 'Проведите рисунок': 'Draw your pattern', 'Открыть хранилище': 'Unlock vault', 'Проверка…': 'Checking…',
+  'Мастер-пароль': 'Master password', 'Войти мастер-паролем': 'Use master password', 'Вернуться к PIN': 'Return to PIN', 'Вернуться к рисунку': 'Return to pattern', 'Графический ключ': 'Pattern',
+  'Сначала создайте хранилище в основном окне.': 'Create a vault in the main window first.', 'В хранилище пока ничего нет.': 'The vault is empty.', 'Выберите название слева.': 'Select an item on the left.',
+  'Новый текст из буфера появится здесь.': 'New clipboard text will appear here.', 'Скопированный снимок экрана появится здесь.': 'Copied screenshots will appear here.', 'Добавьте TOTP-код в основном окне.': 'Add a TOTP code in the main window.',
+  'Логин': 'Username', 'Пароль': 'Password', 'Адрес': 'Address', 'Комментарий': 'Note', 'Не указан': 'Not specified', 'Показать': 'Show', 'Скрыть': 'Hide', 'Учётная запись': 'Account', 'Пустая заметка': 'Empty note',
+  'Защищённый документ': 'Protected document', 'Смотреть': 'View', 'Свернуть': 'Collapse', 'Развернуть': 'Expand'
+}));
+const QUICK_RU = new Map([...QUICK_EN].map(([russian, english]) => [english, russian]));
+
+function resolvedQuickTheme() {
+  if (quickPreferences.theme !== 'system') return quickPreferences.theme;
+  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function applyQuickPreferences(preferences = quickPreferences, root = document) {
+  quickPreferences = {
+    locale: preferences?.locale === 'en' ? 'en' : 'ru',
+    theme: ['light', 'dark', 'system'].includes(preferences?.theme) ? preferences.theme : 'light',
+  };
+  document.documentElement.lang = quickPreferences.locale;
+  document.body.dataset.theme = resolvedQuickTheme();
+  const translations = quickPreferences.locale === 'en' ? QUICK_EN : QUICK_RU;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    const raw = node.nodeValue;
+    const trimmed = raw.trim();
+    const translated = translations.get(trimmed);
+    if (translated) node.nodeValue = raw.replace(trimmed, translated);
+  }
+  root.querySelectorAll?.('[placeholder], [aria-label], [title]').forEach((element) => {
+    for (const attribute of ['placeholder', 'aria-label', 'title']) {
+      const value = element.getAttribute(attribute);
+      if (translations.has(value)) element.setAttribute(attribute, translations.get(value));
+    }
+  });
+}
+
+const quickLocalizationObserver = new MutationObserver((records) => {
+  if (quickPreferences.locale !== 'en') return;
+  for (const record of records) for (const node of record.addedNodes) if (node.nodeType === Node.ELEMENT_NODE) applyQuickPreferences(quickPreferences, node);
+});
+quickLocalizationObserver.observe(document.body, { childList: true, subtree: true });
+
+const time = (value) => new Intl.DateTimeFormat(quickPreferences.locale === 'en' ? 'en' : 'ru', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' }).format(new Date(value));
 
 function Glyph({ name }) {
   const paths = {
@@ -24,26 +71,123 @@ function Glyph({ name }) {
 
 function Empty({ children }) { return <div className="empty"><span>—</span><p>{children}</p></div>; }
 
-function Unlock({ vaultExists, onUnlock }) {
-  const [password, setPassword] = useState('');
+function appendPatternNode(path, value) {
+  if (path.includes(value)) return path;
+  const next = [...path];
+  const previous = next.at(-1);
+  if (previous !== undefined) {
+    const from = Number(previous); const to = Number(value);
+    const rowDiff = Math.floor(to / 3) - Math.floor(from / 3);
+    const colDiff = (to % 3) - (from % 3);
+    if (rowDiff % 2 === 0 && colDiff % 2 === 0) {
+      const middle = String(from + (rowDiff / 2) * 3 + colDiff / 2);
+      if (middle !== previous && middle !== value && !next.includes(middle)) next.push(middle);
+    }
+  }
+  next.push(value);
+  return next;
+}
+
+function PatternPad({ busy, onComplete, onTooShort }) {
+  const gridRef = useRef(null);
+  const pathRef = useRef([]);
+  const pointerIdRef = useRef(null);
+  const [path, setPath] = useState([]);
+  const [pointer, setPointer] = useState(null);
+
+  const setNextPath = (value) => {
+    const next = appendPatternNode(pathRef.current, value);
+    if (next !== pathRef.current) { pathRef.current = next; setPath(next); }
+  };
+  const pointForEvent = (event) => {
+    const rect = gridRef.current.getBoundingClientRect();
+    return { x: (event.clientX - rect.left) * 184 / rect.width, y: (event.clientY - rect.top) * 184 / rect.height };
+  };
+  const nodeAt = (event) => {
+    const nodes = [...gridRef.current.querySelectorAll('[data-pattern-node]')];
+    let best = null; let distance = 30;
+    for (const node of nodes) {
+      const rect = node.getBoundingClientRect();
+      const candidate = Math.hypot(event.clientX - (rect.left + rect.width / 2), event.clientY - (rect.top + rect.height / 2));
+      if (candidate <= distance) { best = node.dataset.patternNode; distance = candidate; }
+    }
+    return best;
+  };
+  const reset = () => { pathRef.current = []; setPath([]); setPointer(null); pointerIdRef.current = null; };
+  const begin = (event) => {
+    if (busy || event.button !== 0) return;
+    const node = nodeAt(event);
+    if (node === null) return;
+    event.preventDefault();
+    pointerIdRef.current = event.pointerId;
+    gridRef.current.setPointerCapture(event.pointerId);
+    pathRef.current = [];
+    setPath([]);
+    setNextPath(node);
+    setPointer(pointForEvent(event));
+  };
+  const move = (event) => {
+    if (pointerIdRef.current !== event.pointerId) return;
+    event.preventDefault();
+    const node = nodeAt(event);
+    if (node !== null) setNextPath(node);
+    setPointer(pointForEvent(event));
+  };
+  const finish = async (event) => {
+    if (pointerIdRef.current !== event.pointerId) return;
+    event.preventDefault();
+    if (gridRef.current.hasPointerCapture(event.pointerId)) gridRef.current.releasePointerCapture(event.pointerId);
+    pointerIdRef.current = null;
+    setPointer(null);
+    const credential = pathRef.current.join('-');
+    if (pathRef.current.length < 5) { onTooShort(); reset(); return; }
+    await onComplete(credential);
+    reset();
+  };
+  const centers = [[17,17],[92,17],[167,17],[17,92],[92,92],[167,92],[17,167],[92,167],[167,167]];
+  const points = path.map((value) => centers[Number(value)]).filter(Boolean);
+  const polyline = points.map((point) => point.join(',')).join(' ');
+  const last = points.at(-1);
+  return <div ref={gridRef} className={`quick-pattern${busy ? ' is-busy' : ''}`} onPointerDown={begin} onPointerMove={move} onPointerUp={finish} onPointerCancel={reset} aria-label="Графический ключ">
+    <svg className="quick-pattern__lines" viewBox="0 0 184 184" aria-hidden="true">
+      {points.length > 1 && <polyline points={polyline}/>}
+      {last && pointer && <line x1={last[0]} y1={last[1]} x2={pointer.x} y2={pointer.y}/>}
+    </svg>
+    {centers.map((_, index) => <span key={index} data-pattern-node={index} className={path.includes(String(index)) ? 'is-selected' : ''}><i/></span>)}
+  </div>;
+}
+
+function Unlock({ vaultExists, quickMode, onUnlock }) {
+  const [credential, setCredential] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [masterFallback, setMasterFallback] = useState(false);
+  useEffect(() => { setMasterFallback(false); setCredential(''); setError(''); }, [quickMode]);
   if (!vaultExists) return <Empty>Сначала создайте хранилище в основном окне.</Empty>;
-  const submit = async (event) => {
-    event.preventDefault(); setBusy(true); setError('');
+  const mode = masterFallback || !['pin', 'pattern'].includes(quickMode) ? 'password' : quickMode;
+  const label = mode === 'pattern' ? 'Проведите рисунок' : mode === 'pin' ? 'Введите PIN' : 'Введите мастер-пароль';
+  const submitCredential = async (value) => {
+    setBusy(true); setError('');
     try {
-      const result = await call(api.unlockVault(password));
-      if (result.wiped) return setError('Хранилище уничтожено по настройке безопасности.');
-      if (!result.unlocked) return setError(result.retryAfterSeconds ? `Неверный пароль. Повторите через ${result.retryAfterSeconds} сек.` : `Неверный пароль. Попытка ${result.failedAttempts}.`);
-      setPassword(''); onUnlock(result);
-    } catch { setError('Не удалось открыть хранилище.'); }
+      const result = await call(api.unlockVault(mode, value));
+      if (result.wiped) { setError('Хранилище уничтожено по настройке безопасности.'); return false; }
+      if (!result.unlocked) {
+        const subject = mode === 'pattern' ? 'Неверный рисунок' : mode === 'pin' ? 'Неверный PIN' : 'Неверный пароль';
+        setError(result.retryAfterSeconds ? `${subject}. Повторите через ${result.retryAfterSeconds} сек.` : `${subject}. Попытка ${result.failedAttempts}.`);
+        return false;
+      }
+      setCredential(''); onUnlock(result); return true;
+    } catch { setError(mode === 'password' ? 'Не удалось открыть хранилище.' : 'Быстрый вход недоступен. Используйте мастер-пароль.'); return false; }
     finally { setBusy(false); }
   };
-  return <div className="unlock">
+  const submit = (event) => { event.preventDefault(); submitCredential(credential); };
+  return <div className={`unlock unlock--${mode}`}>
     <div className="unlock__mark">N</div>
-    <div><h2>Закрытый раздел</h2><p>Введите мастер-пароль Nocturne. Он не сохраняется в этой панели.</p></div>
-    <form onSubmit={submit}><input autoFocus type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Мастер-пароль" minLength="10" required/><button disabled={busy}>{busy ? 'Проверка…' : 'Открыть'}</button></form>
+    <div className="unlock__copy"><h2>{mode === 'password' ? 'Закрытый раздел' : 'Быстрый вход'}</h2><p>{label}</p></div>
+    {mode === 'pattern' ? <PatternPad busy={busy} onComplete={submitCredential} onTooShort={() => setError('Соедините не менее пяти точек.')}/> :
+      <form onSubmit={submit}><input autoFocus type="password" inputMode={mode === 'pin' ? 'numeric' : undefined} value={credential} onChange={(event) => setCredential(mode === 'pin' ? event.target.value.replace(/\D/g, '').slice(0, 12) : event.target.value)} placeholder={mode === 'pin' ? 'PIN-код' : 'Мастер-пароль'} minLength={mode === 'pin' ? 6 : 10} maxLength={mode === 'pin' ? 12 : undefined} required/><button disabled={busy}>{busy ? 'Проверка…' : 'Открыть хранилище'}</button></form>}
     {error && <div className="unlock__error">{error}</div>}
+    {quickMode !== 'password' && <button className="unlock__fallback" onClick={() => { setMasterFallback(!masterFallback); setCredential(''); setError(''); }}>{masterFallback ? (quickMode === 'pattern' ? 'Вернуться к рисунку' : 'Вернуться к PIN') : 'Войти мастер-паролем'}</button>}
   </div>;
 }
 
@@ -151,21 +295,42 @@ function App() {
   const [tab, setTab] = useState('clip');
   const [activity, setActivity] = useState({ clipboard: [], screenshots: [] });
   const [vaultExists, setVaultExists] = useState(false);
+  const [quickUnlockMode, setQuickUnlockMode] = useState('password');
   const [snapshot, setSnapshot] = useState(null);
   useEffect(() => {
-    call(api.bootstrap()).then((data) => { setExpanded(data.expanded); setActivity(data.activity); setVaultExists(data.vaultExists); });
-    api.onExpanded((value) => { setExpanded(value); if (!value) setSnapshot(null); }); api.onActivity(setActivity); api.onVaultLocked(() => setSnapshot(null)); api.onVaultWiped(() => { setSnapshot(null); setVaultExists(false); }); api.onVaultCreated(() => setVaultExists(true));
+    call(api.bootstrap()).then((data) => { applyQuickPreferences(data.preferences); setExpanded(data.expanded); setActivity(data.activity); setVaultExists(data.vaultExists); setQuickUnlockMode(data.quickUnlockMode || 'password'); });
+    api.onExpanded(setExpanded); api.onActivity(setActivity); api.onUnlockMode(setQuickUnlockMode); api.onVaultLocked((data) => { setSnapshot(null); setActivity({ clipboard: [], screenshots: [] }); setQuickUnlockMode(data?.quickUnlockMode || 'password'); }); api.onVaultWiped(() => { setSnapshot(null); setActivity({ clipboard: [], screenshots: [] }); setVaultExists(false); setQuickUnlockMode('password'); }); api.onVaultCreated(() => setVaultExists(true));
+    api.onPreferences((preferences) => applyQuickPreferences(preferences));
   }, []);
+  useEffect(() => {
+    if (!snapshot) return undefined;
+    let lastPulse = 0;
+    const pulse = () => {
+      const now = Date.now();
+      if (now - lastPulse >= 1_000) { lastPulse = now; api.recordActivity(); }
+    };
+    window.addEventListener('pointerdown', pulse, true);
+    window.addEventListener('keydown', pulse, true);
+    pulse();
+    return () => {
+      window.removeEventListener('pointerdown', pulse, true);
+      window.removeEventListener('keydown', pulse, true);
+    };
+  }, [snapshot]);
   const tabs = useMemo(() => [{ id: 'clip', label: 'Буфер', icon: 'clip', count: activity.clipboard.length }, { id: 'shots', label: 'Скриншоты', icon: 'shots', count: activity.screenshots.length }, { id: 'notes', label: 'Заметки', icon: 'notes' }, { id: 'passwords', label: 'Пароли', icon: 'passwords' }, { id: 'otp', label: 'Коды', icon: 'otp' }, { id: 'documents', label: 'Документы', icon: 'documents' }], [activity]);
-  const protectedTabs = ['notes', 'passwords', 'otp', 'documents'];
-  const choose = (id) => { setTab(id); if (!protectedTabs.includes(id)) setSnapshot(null); };
+  const protectedTabs = ['clip', 'shots', 'notes', 'passwords', 'otp', 'documents'];
+  const choose = (id) => setTab(id);
   return <div className={expanded ? 'quick-root is-expanded' : 'quick-root'}>
-    <button className="chevron" onClick={() => api.toggle()} aria-label={expanded ? 'Свернуть' : 'Развернуть'}><span></span></button>
+    <button className="chevron" onClick={() => api.toggle()} onContextMenu={(event) => { event.preventDefault(); api.showContextMenu(); }} aria-label={expanded ? 'Свернуть' : 'Развернуть'}><span></span></button>
     <div className="drawer">
       <aside className="rail"><nav>{tabs.map((item) => <button key={item.id} className={tab === item.id ? 'active' : ''} onClick={() => choose(item.id)}><Glyph name={item.icon}/><span>{item.label}</span>{item.count !== undefined && <em>{item.count}</em>}</button>)}</nav><button className="open-main" onClick={() => api.openMain()}><Glyph name="open"/><span>Открыть</span></button></aside>
-      <main className="surface">{tab === 'clip' && <ClipboardView items={activity.clipboard} update={setActivity}/>} {tab === 'shots' && <ScreenshotsView items={activity.screenshots} update={setActivity}/>} {protectedTabs.includes(tab) && (snapshot ? (tab === 'otp' ? <OtpView snapshot={snapshot}/> : <VaultView kind={tab} snapshot={snapshot} update={setSnapshot}/>) : <Unlock vaultExists={vaultExists} onUnlock={setSnapshot}/>)}</main>
+      <main className="surface">{protectedTabs.includes(tab) && (snapshot ? (tab === 'clip' ? <ClipboardView items={activity.clipboard} update={setActivity}/> : tab === 'shots' ? <ScreenshotsView items={activity.screenshots} update={setActivity}/> : tab === 'otp' ? <OtpView snapshot={snapshot}/> : <VaultView kind={tab} snapshot={snapshot} update={setSnapshot}/>) : <Unlock vaultExists={vaultExists} quickMode={quickUnlockMode} onUnlock={(value) => { setSnapshot(value); setActivity(value.quickActivity || { clipboard: [], screenshots: [] }); }}/>)}</main>
     </div>
   </div>;
 }
 
 createRoot(document.getElementById('root')).render(<App/>);
+
+window.matchMedia?.('(prefers-color-scheme: dark)').addEventListener?.('change', () => {
+  if (quickPreferences.theme === 'system') applyQuickPreferences(quickPreferences);
+});

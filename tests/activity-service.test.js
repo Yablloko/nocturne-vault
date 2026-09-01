@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const os = require('node:os');
 const path = require('node:path');
-const { ActivityService, HISTORY_LIMIT } = require('../src/services/activity-service');
+const { ActivityService, HISTORY_LIMIT, MAX_SCREENSHOT_BYTES } = require('../src/services/activity-service');
 
 test('локальная история зашифрована, ограничена и поддерживает очистку', async (t) => {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'nocturne-activity-test-'));
@@ -35,4 +35,13 @@ test('локальная история зашифрована, ограниче
   await service.destroyAndReset();
   assert.deepEqual(service.getSnapshot(), { clipboard: [], screenshots: [] });
   assert.notDeepEqual(service.key, previousKey);
+});
+
+test('отклоняет одиночный снимок, превышающий безопасный лимит', async (t) => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'nocturne-activity-limit-'));
+  t.after(() => fs.rm(root, { recursive: true, force: true }));
+  const service = new ActivityService(root, { protect: (value) => Buffer.from(value), unprotect: (value) => Buffer.from(value) });
+  await service.initialize();
+  assert.equal(await service.addScreenshot(Buffer.alloc(MAX_SCREENSHOT_BYTES + 1)), false);
+  assert.equal(service.getSnapshot().screenshots.length, 0);
 });

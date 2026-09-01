@@ -4,6 +4,8 @@ const fsp = require('node:fs/promises');
 const path = require('node:path');
 
 const HISTORY_LIMIT = 30;
+const MAX_SCREENSHOT_BYTES = 16 * 1024 * 1024;
+const MAX_SCREENSHOT_TOTAL_BYTES = 96 * 1024 * 1024;
 
 function encode(value) { return Buffer.from(value).toString('base64'); }
 function decode(value) { return Buffer.from(value, 'base64'); }
@@ -73,7 +75,7 @@ class ActivityService {
 
   async addScreenshot(png) {
     const buffer = Buffer.from(png);
-    if (!buffer.length) return false;
+    if (!buffer.length || buffer.length > MAX_SCREENSHOT_BYTES) return false;
     const hash = crypto.createHash('sha256').update(buffer).digest('hex');
     if (this.payload.screenshots[0]?.hash === hash) return false;
     const id = crypto.randomUUID();
@@ -81,22 +83,35 @@ class ActivityService {
     const item = { id, hash, size: buffer.length, createdAt: new Date().toISOString() };
     this.payload.screenshots.unshift(item);
     const removed = this.payload.screenshots.splice(HISTORY_LIMIT);
+    let totalBytes = this.payload.screenshots.reduce((total, shot) => total + Number(shot.size || 0), 0);
+    while (totalBytes > MAX_SCREENSHOT_TOTAL_BYTES && this.payload.screenshots.length > 1) {
+      const old = this.payload.screenshots.pop();
+      totalBytes -= Number(old.size || 0);
+      removed.push(old);
+    }
     for (const old of removed) await this.secureDelete(path.join(this.shotsDir, `${old.id}.nvs`));
     await this.persist();
     return true;
   }
 
   async getScreenshot(id) {
-    if (!this.payload.screenshots.some((item) => item.id === id)) throw new Error('SCREENSHOT_NOT_FOUND');
-    const envelope = JSON.parse(await fsp.readFile(path.join(this.shotsDir, `${id}.nvs`), 'utf8'));
+    const item = this.payload.screenshots.find((shot) => shot.id === id);
+    if (!item) throw new Error('SCREENSHOT_NOT_FOUND');
+    if (Number(item.size) > MAX_SCREENSHOT_BYTES) throw new Error('SCREENSHOT_TOO_LARGE');
+    const filePath = path.join(this.shotsDir, `${id}.nvs`);
+    const stat = await fsp.stat(filePath);
+    if (stat.size > MAX_SCREENSHOT_BYTES * 2) throw new Error('SCREENSHOT_TOO_LARGE');
+    const envelope = JSON.parse(await fsp.readFile(filePath, 'utf8'));
     return decrypt(this.key, envelope, `quickshot:${id}`);
   }
 
   async deleteItem(section, id) {
     if (section === 'clipboard') this.payload.clipboard = this.payload.clipboard.filter((item) => item.id !== id);
     if (section === 'screenshots') {
-      this.payload.screenshots = this.payload.screenshots.filter((item) => item.id !== id);
-      await this.secureDelete(path.join(this.shotsDir, `${id}.nvs`));
+      const item = this.payload.screenshots.find((shot) => shot.id === id);
+      if (!item) throw new Error('SCREENSHOT_NOT_FOUND');
+      this.payload.screenshots = this.payload.screenshots.filter((shot) => shot.id !== item.id);
+      await this.secureDelete(path.join(this.shotsDir, `${item.id}.nvs`));
     }
     await this.persist();
     return this.getSnapshot();
@@ -150,4 +165,4 @@ class ActivityService {
   }
 }
 
-module.exports = { ActivityService, HISTORY_LIMIT };
+module.exports = { ActivityService, HISTORY_LIMIT, MAX_SCREENSHOT_BYTES, MAX_SCREENSHOT_TOTAL_BYTES };
