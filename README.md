@@ -13,6 +13,7 @@
     <img src="https://img.shields.io/badge/версия-0.8.13-313638?style=flat-square" alt="Версия 0.8.13">
     <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?style=flat-square&logo=windows11&logoColor=white" alt="Windows 10 и 11">
     <img src="https://img.shields.io/badge/данные-только%20локально-44625A?style=flat-square" alt="Только локальное хранение">
+    <a href="LICENSE"><img src="https://img.shields.io/badge/лицензия-GPL--3.0-6B4F87?style=flat-square" alt="Лицензия GPL-3.0"></a>
   </p>
 </div>
 
@@ -122,7 +123,7 @@ assets/                 Иконка приложения
 
 Проект находится в активной разработке. Независимый внешний аудит криптографии пока не проводился.
 
-Лицензия на исходный код пока не выбрана. До появления файла `LICENSE` все права сохраняются за правообладателем.
+Исходный код распространяется по лицензии [GNU General Public License v3.0](LICENSE). Изменённые и распространяемые версии должны оставаться открытыми на условиях GPL-3.0. Copyright © 2026 Nocturne.
 
 <div align="center">
   <sub>Создано для тех, кто хочет хранить личное у себя.</sub>

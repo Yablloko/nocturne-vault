@@ -29,4 +29,6 @@ Changes to encryption, unlocking, import, export, or data deletion must include 
 
 Explain what changed, why it is needed, and how it was tested. Make sure CI passes and the diff contains no secrets or machine-specific paths.
 
+By submitting a change, you agree to license your contribution under [GPL-3.0](LICENSE).
+
 Do not disclose vulnerabilities in Issues. Follow [SECURITY.en.md](SECURITY.en.md) instead.

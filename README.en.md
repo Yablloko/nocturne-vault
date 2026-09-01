@@ -13,6 +13,7 @@
     <img src="https://img.shields.io/badge/version-0.8.13-313638?style=flat-square" alt="Version 0.8.13">
     <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?style=flat-square&logo=windows11&logoColor=white" alt="Windows 10 and 11">
     <img src="https://img.shields.io/badge/data-local%20only-44625A?style=flat-square" alt="Local-only data">
+    <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-6B4F87?style=flat-square" alt="GPL-3.0 license"></a>
   </p>
 </div>
 
@@ -122,7 +123,7 @@ Read [CONTRIBUTING.en.md](CONTRIBUTING.en.md) before making a change. Report sec
 
 The project is under active development. Its cryptography has not yet received an independent external audit.
 
-No source-code license has been selected yet. Until a `LICENSE` file is added, all rights are reserved by the copyright holder.
+The source code is distributed under the [GNU General Public License v3.0](LICENSE). Modified versions that are distributed must remain open under GPL-3.0. Copyright © 2026 Nocturne.
 
 <div align="center">
   <sub>Built for people who want to keep personal data personal.</sub>

@@ -3,6 +3,7 @@
   "version": "0.8.13",
   "description": "Полностью локальное зашифрованное хранилище для Windows",
   "author": "Nocturne",
+  "license": "GPL-3.0-only",
   "private": true,
   "repository": {
     "type": "git",
@@ -47,6 +48,7 @@
     "files": [
       "src/**/*",
       "assets/**/*",
+      "LICENSE",
       "package.json"
     ],
     "win": {
@@ -55,6 +57,7 @@
     },
     "nsis": {
       "include": "build/installer.nsh",
+      "license": "LICENSE",
       "oneClick": false,
       "perMachine": false,
       "allowElevation": true,
