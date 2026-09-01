@@ -78,7 +78,7 @@ function parseOtpAuthUri(value) {
   };
 }
 
-function decodeOtpQrImage(nativeImage) {
+function decodeQrPayload(nativeImage) {
   if (!nativeImage || nativeImage.isEmpty()) throw new Error('OTP_QR_EMPTY');
   const originalSize = nativeImage.getSize();
   const scale = Math.min(1, 1800 / Math.max(originalSize.width, originalSize.height));
@@ -95,11 +95,19 @@ function decodeOtpQrImage(nativeImage) {
   try {
     const result = jsQR(rgba, width, height, { inversionAttempts: 'attemptBoth' });
     if (!result?.data) throw new Error('OTP_QR_NOT_FOUND');
-    return parseOtpAuthUri(result.data);
+    return String(result.data).trim();
   } finally {
     rgba.fill(0);
     bitmap.fill(0);
   }
 }
 
-module.exports = { decodeBase32, decodeOtpQrImage, generateTotp, normalizeBase32, parseOtpAuthUri };
+function decodeOtpQrImage(nativeImage) {
+  return parseOtpAuthUri(decodeQrPayload(nativeImage));
+}
+
+function isSensitiveOtpPayload(value) {
+  return /^otpauth(?:-migration)?\s*:/i.test(String(value || '').trim());
+}
+
+module.exports = { decodeBase32, decodeOtpQrImage, decodeQrPayload, generateTotp, isSensitiveOtpPayload, normalizeBase32, parseOtpAuthUri };

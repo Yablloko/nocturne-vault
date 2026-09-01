@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' vaultmedia: data:; media-src 'self' vaultmedia:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' vaultmedia: data:; media-src 'self' vaultmedia:; frame-src vaultmedia:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <title>Nocturne Vault</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -36,6 +36,8 @@
         <label class="field field--full"><span>Название</span><input name="title" required maxlength="120" autocomplete="off" placeholder="Например, Почта"></label>
         <label class="field"><span>Логин</span><input name="username" maxlength="300" autocomplete="off" placeholder="name@example.com"></label>
         <label class="field"><span>Папка</span><select name="folderId"></select></label>
+        <label class="field"><span>Теги</span><input name="tags" maxlength="400" autocomplete="off" placeholder="работа, почта"></label>
+        <label class="field field--check"><input name="favorite" type="checkbox"><span>В избранном</span></label>
         <label class="field field--full">
           <span>Пароль</span>
           <div class="field-action"><input name="password" type="password" maxlength="1000" autocomplete="new-password"><button type="button" data-action="toggle-entry-password">Показать</button><button type="button" data-action="generate-password">Создать</button></div>
@@ -59,7 +61,9 @@
       </div>
       <input type="hidden" name="id">
       <label class="field"><span>Название</span><input name="title" required maxlength="160" autocomplete="off" placeholder="О чём эта заметка"></label>
-      <label class="field"><span>Текст</span><textarea name="body" maxlength="100000" rows="12" placeholder="Пишите без форматирования — содержимое будет зашифровано вместе с контейнером"></textarea></label>
+      <div class="form-grid"><label class="field"><span>Папка</span><select name="folderId"></select></label><label class="field"><span>Теги</span><input name="tags" maxlength="400" autocomplete="off" placeholder="идеи, личное"></label></div>
+      <label class="field field--check"><input name="favorite" type="checkbox"><span>В избранном</span></label>
+      <label class="field"><span>Текст</span><textarea name="body" maxlength="100000" rows="12" placeholder="Текст заметки"></textarea></label>
       <div class="dialog__footer"><button type="button" class="button button--ghost" data-close-dialog="note-dialog">Отмена</button><button type="submit" class="button button--primary">Сохранить</button></div>
     </form>
   </dialog>
@@ -74,6 +78,7 @@
   </dialog>
 
   <div id="toast-region" class="toast-region" aria-live="polite"></div>
+  <div id="privacy-curtain" class="privacy-curtain" aria-hidden="true"><span>N</span><strong>Nocturne скрыт</strong></div>
   <script src="app.js"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { generateTotp, normalizeBase32, parseOtpAuthUri } = require('../src/services/otp-service');
+const { generateTotp, isSensitiveOtpPayload, normalizeBase32, parseOtpAuthUri } = require('../src/services/otp-service');
 
 const encodeBase32 = (buffer) => {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
@@ -48,4 +48,11 @@ test('отклоняет HOTP, migration URI и повреждённые пар�
   assert.throws(() => parseOtpAuthUri('otpauth-migration://offline?data=x'), /UNSUPPORTED_OTP_URI/);
   assert.throws(() => parseOtpAuthUri('otpauth://totp/Test?secret=not0secret'), /INVALID_OTP_SECRET/);
   assert.throws(() => parseOtpAuthUri('otpauth://totp/Test?secret=JBSWY3DPEHPK3PXP&digits=7'), /INVALID_OTP_DIGITS/);
+});
+
+test('распознаёт секретные OTP payload независимо от поддержки импорта', () => {
+  assert.equal(isSensitiveOtpPayload(' otpauth://totp/Test?secret=BAD '), true);
+  assert.equal(isSensitiveOtpPayload('OTPAUTH://hotp/Test?secret=JBSWY3DPEHPK3PXP'), true);
+  assert.equal(isSensitiveOtpPayload('otpauth-migration://offline?data=secret'), true);
+  assert.equal(isSensitiveOtpPayload('https://example.com/ordinary-qr'), false);
 });

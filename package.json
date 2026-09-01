@@ -1,8 +1,21 @@
 {
   "name": "nocturne-vault",
-  "version": "0.3.1",
+  "version": "0.8.13",
   "description": "Полностью локальное зашифрованное хранилище для Windows",
   "author": "Nocturne",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Yablloko/nocturne-vault.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Yablloko/nocturne-vault/issues"
+  },
+  "homepage": "https://github.com/Yablloko/nocturne-vault#readme",
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@11.19.0",
   "main": "src/main.js",
   "type": "commonjs",
   "scripts": {
@@ -10,17 +23,19 @@
     "start": "pnpm build:quick && electron .",
     "dist:win": "pnpm build:quick && electron-builder --win nsis",
     "test": "node --test tests/*.test.js",
-    "check": "pnpm build:quick && node --check src/main.js && node --check src/preload.js && node --check src/quick/preload.js && node --check src/services/vault-service.js && node --check src/services/activity-service.js && node --check src/services/media-range.js && node --check src/services/legacy-temp-cleanup.js && node --check src/services/otp-service.js && node --check src/renderer/app.js"
+    "check": "pnpm build:quick && node --check src/main.js && node --check src/preload.js && node --check src/quick/preload.js && node --check src/services/vault-service.js && node --check src/services/activity-service.js && node --check src/services/media-range.js && node --check src/services/legacy-temp-cleanup.js && node --check src/services/otp-service.js && node --check src/services/app-preferences-service.js && node --check src/services/windows-autostart-service.js && node --check src/renderer/app.js"
   },
   "dependencies": {
-    "jsqr": "https://codeload.github.com/cozmo/jsQR/tar.gz/master",
+    "fflate": "0.8.3",
+    "jsqr": "1.4.0",
     "react": "19.2.7",
     "react-dom": "19.2.7"
   },
   "devDependencies": {
-    "electron": "^37.2.6",
+    "electron": "43.4.1",
     "electron-builder": "^26.0.12",
-    "esbuild": "^0.25.9"
+    "esbuild": "^0.25.9",
+    "playwright": "1.62.1"
   },
   "build": {
     "appId": "com.nocturne.vault",
@@ -39,8 +54,12 @@
       "target": "nsis"
     },
     "nsis": {
+      "include": "build/installer.nsh",
       "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": false,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true
     }
