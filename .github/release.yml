@@ -1,0 +1,12 @@
+changelog:
+  categories:
+    - title: Новое / Added
+      labels: [enhancement, feature]
+    - title: Исправления / Fixed
+      labels: [bug, fix]
+    - title: Безопасность / Security
+      labels: [security]
+    - title: Зависимости / Dependencies
+      labels: [dependencies]
+    - title: Прочее / Other
+      labels: ["*"]

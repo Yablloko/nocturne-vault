@@ -1,0 +1,32 @@
+name: Идея / Feature request
+description: Предложить улучшение / Suggest an improvement
+title: "[Idea] "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Какую проблему это решит? / What problem would this solve?
+      description: Опишите ситуацию, а не только готовое решение. / Describe the situation, not only a proposed solution.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Как это должно работать? / How should it work?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Что используете сейчас? / Current workaround
+
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Принципы / Principles
+      options:
+        - label: Функция может работать без обязательного облачного сервера / The feature can work without a required cloud server
+          required: true

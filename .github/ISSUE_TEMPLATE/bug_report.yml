@@ -1,0 +1,71 @@
+name: Ошибка / Bug report
+description: Сообщить о воспроизводимой проблеме / Report a reproducible problem
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Спасибо за отчёт. Не добавляйте пароли, recovery-ключи и личные данные.
+        Thank you for the report. Do not include passwords, recovery keys, or personal data.
+
+  - type: input
+    id: version
+    attributes:
+      label: Версия / Version
+      placeholder: 0.8.13
+    validations:
+      required: true
+
+  - type: dropdown
+    id: system
+    attributes:
+      label: Windows
+      options:
+        - Windows 11
+        - Windows 10
+        - Другая версия / Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Что произошло? / What happened?
+      description: Опишите проблему простыми словами. / Describe the problem in plain language.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Как повторить? / Steps to reproduce
+      placeholder: |
+        1. Открыть… / Open…
+        2. Нажать… / Click…
+        3. Увидеть… / Observe…
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Ожидаемый результат / Expected result
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Дополнительная информация / Additional context
+      description: Можно приложить скриншот с удалёнными личными данными. / You may attach a screenshot after removing personal data.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Проверка / Checklist
+      options:
+        - label: Я проверил последнюю версию / I checked the latest version
+          required: true
+        - label: В отчёте нет секретов и личных данных / The report contains no secrets or personal data
+          required: true

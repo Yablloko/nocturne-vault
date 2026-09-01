@@ -75,6 +75,7 @@ const path = require('node:path');
     await window.locator('.record-row .item-select').first().click();
     await window.waitForSelector('.batch-actions');
     await window.locator('[data-clear-mixed="passwords"]').click();
+    await clearToasts(window);
     await window.screenshot({ path: path.join(process.cwd(), 'artifacts', 'nocturne-passwords.png') });
     await focusMainWindow(electronApp, window);
     await window.locator('[data-page="otp"]').click();
@@ -144,6 +145,7 @@ const path = require('node:path');
     await window.evaluate(() => { document.body.dataset.theme = 'dark'; });
     const darkMediaBackground = await mediaCard.evaluate((element) => getComputedStyle(element).backgroundColor);
     if (darkMediaBackground === 'rgb(225, 226, 223)') throw new Error('Dark media card retained its light background');
+    await clearToasts(window);
     await window.screenshot({ path: path.join(process.cwd(), 'artifacts', 'nocturne-media-mixed-grid-dark.png') });
     await window.evaluate(() => { document.body.dataset.theme = 'light'; });
     await mediaCard.dragTo(mediaFolder);
@@ -204,6 +206,7 @@ const path = require('node:path');
     await window.waitForFunction(() => document.body.dataset.theme === 'dark' && document.documentElement.lang === 'en');
     const darkPrimary = await window.locator('.button--primary').first().evaluate((element) => getComputedStyle(element).backgroundColor);
     if (darkPrimary === 'rgb(228, 225, 217)') throw new Error('Dark theme still uses the light primary button');
+    await clearToasts(window);
     await window.screenshot({ path: path.join(process.cwd(), 'artifacts', 'nocturne-settings-dark-en.png') });
     await window.locator('[data-settings-section="application"]').click();
     await window.locator('#setting-theme').selectOption('light');
@@ -255,6 +258,10 @@ async function drawPattern(window, indexes) {
     await window.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps: 5 });
   }
   await window.mouse.up();
+}
+
+async function clearToasts(window) {
+  await window.locator('.toast').evaluateAll((toasts) => toasts.forEach((toast) => toast.remove()));
 }
 
 async function focusMainWindow(electronApp, window) {
