@@ -10,7 +10,7 @@
   </p>
   <p>
     <a href="https://github.com/Yablloko/nocturne-vault/actions/workflows/ci.yml"><img src="https://github.com/Yablloko/nocturne-vault/actions/workflows/ci.yml/badge.svg?branch=main" alt="Статус проверки"></a>
-    <img src="https://img.shields.io/badge/версия-0.8.13-313638?style=flat-square" alt="Версия 0.8.13">
+    <img src="https://img.shields.io/badge/версия-0.8.14-313638?style=flat-square" alt="Версия 0.8.14">
     <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?style=flat-square&logo=windows11&logoColor=white" alt="Windows 10 и 11">
     <img src="https://img.shields.io/badge/данные-только%20локально-44625A?style=flat-square" alt="Только локальное хранение">
     <a href="LICENSE"><img src="https://img.shields.io/badge/лицензия-GPL--3.0-6B4F87?style=flat-square" alt="Лицензия GPL-3.0"></a>
@@ -88,7 +88,7 @@ pnpm start
 pnpm dist:win
 ```
 
-Результат появится в `dist/Nocturne-Vault-Setup-0.8.13.exe`.
+Результат появится в `dist/Nocturne-Vault-Setup-0.8.14.exe`.
 
 ## Проверка проекта
 

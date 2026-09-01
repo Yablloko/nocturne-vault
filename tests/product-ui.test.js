@@ -27,6 +27,14 @@ test('экран TOTP не содержит лишнюю промо-размет
   assert.equal(styles.match(/\.otp-list \{([^}]*)\}/s)[1].includes('border-top'), false);
 });
 
+test('код TOTP сохраняет тёмное оформление при наведении и фокусе', () => {
+  const styles = source('src/renderer/styles.css');
+  const state = styles.match(/body\[data-theme="dark"\] \.otp-code:hover,\s*body\[data-theme="dark"\] \.otp-code:focus-visible \{([^}]*)\}/s);
+  assert.ok(state);
+  assert.match(state[1], /color:\s*#f1efe8/);
+  assert.match(state[1], /background:\s*#343835/);
+});
+
 test('TOTP-секреты исключены из истории буфера', () => {
   const main = source('src/main.js');
   assert.match(main, /isSensitiveOtpPayload\(text\)/);

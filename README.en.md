@@ -10,7 +10,7 @@
   </p>
   <p>
     <a href="https://github.com/Yablloko/nocturne-vault/actions/workflows/ci.yml"><img src="https://github.com/Yablloko/nocturne-vault/actions/workflows/ci.yml/badge.svg?branch=main" alt="Build status"></a>
-    <img src="https://img.shields.io/badge/version-0.8.13-313638?style=flat-square" alt="Version 0.8.13">
+    <img src="https://img.shields.io/badge/version-0.8.14-313638?style=flat-square" alt="Version 0.8.14">
     <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?style=flat-square&logo=windows11&logoColor=white" alt="Windows 10 and 11">
     <img src="https://img.shields.io/badge/data-local%20only-44625A?style=flat-square" alt="Local-only data">
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-6B4F87?style=flat-square" alt="GPL-3.0 license"></a>
@@ -88,7 +88,7 @@ Build the NSIS installer:
 pnpm dist:win
 ```
 
-The result is written to `dist/Nocturne-Vault-Setup-0.8.13.exe`.
+The result is written to `dist/Nocturne-Vault-Setup-0.8.14.exe`.
 
 ## Project checks
 

@@ -86,6 +86,20 @@ const path = require('node:path');
     await window.waitForSelector('.otp-row');
     if (!/^\d{3} \d{3}$/.test((await window.locator('[data-otp-code]').first().textContent()).trim())) throw new Error('TOTP code was not rendered');
     await window.screenshot({ path: path.join(process.cwd(), 'artifacts', 'nocturne-otp.png') });
+    await window.evaluate(() => { document.body.dataset.theme = 'dark'; });
+    const otpCode = window.locator('.otp-code').first();
+    await otpCode.hover();
+    await window.waitForSelector('.otp-code:hover');
+    await window.waitForTimeout(160);
+    const darkOtpState = await window.locator('.otp-code:hover').evaluate((element) => {
+      const styles = getComputedStyle(element);
+      return { color: styles.color, background: styles.backgroundColor };
+    });
+    if (darkOtpState.color !== 'rgb(241, 239, 232)' || darkOtpState.background !== 'rgb(52, 56, 53)') {
+      throw new Error(`Dark TOTP hover has invalid colors: ${JSON.stringify(darkOtpState)}`);
+    }
+    await window.screenshot({ path: path.join(process.cwd(), 'artifacts', 'nocturne-otp-dark-hover.png') });
+    await window.evaluate(() => { document.body.dataset.theme = 'light'; });
     await window.locator('[data-manage-folders="otp"]').click();
     await window.locator('#folder-form input[name="name"]').fill('Коды работы');
     await window.locator('#folder-form').evaluate((form) => form.requestSubmit());
