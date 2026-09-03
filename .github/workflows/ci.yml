@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Получить исходный код
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Установить pnpm
         uses: pnpm/action-setup@v4
@@ -48,10 +48,10 @@ jobs:
 
     steps:
       - name: Получить исходный код
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Установить JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 17
@@ -61,7 +61,7 @@ jobs:
         shell: pwsh
         run: |
           $sdkManager = Join-Path $env:ANDROID_HOME 'cmdline-tools\latest\bin\sdkmanager.bat'
-          & $sdkManager --install 'platforms;android-37' 'build-tools;36.0.0'
+          & $sdkManager --channel=3 --install 'platforms;android-37' 'build-tools;36.0.0'
 
       - name: Собрать Android и запустить unit-тесты
         working-directory: android
