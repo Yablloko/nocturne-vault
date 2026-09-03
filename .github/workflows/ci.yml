@@ -41,3 +41,33 @@ jobs:
 
       - name: Запустить тесты
         run: pnpm test
+
+  android:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Получить исходный код
+        uses: actions/checkout@v4
+
+      - name: Установить JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+
+      - name: Установить Android SDK 37
+        shell: pwsh
+        run: |
+          $sdkManager = Join-Path $env:ANDROID_HOME 'cmdline-tools\latest\bin\sdkmanager.bat'
+          & $sdkManager --install 'platforms;android-37' 'build-tools;36.0.0'
+
+      - name: Собрать Android и запустить unit-тесты
+        working-directory: android
+        shell: pwsh
+        run: .\build-android.ps1
+
+      - name: Проверить Android Lint
+        working-directory: android
+        run: .\gradlew.bat :app:lintRelease --no-daemon --max-workers=1

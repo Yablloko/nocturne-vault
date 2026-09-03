@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Nocturne" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">#F2F0EA</item>
+        <item name="android:navigationBarColor">#171818</item>
+        <item name="android:windowActionModeOverlay">true</item>
+    </style>
+    <style name="Theme.Nocturne.Protected" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowBackground">#171818</item>
+        <item name="android:colorAccent">#A9C4C8</item>
+        <item name="android:statusBarColor">#171818</item>
+        <item name="android:navigationBarColor">#171818</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

@@ -1,8 +1,8 @@
 <div align="center">
   <img src="assets/nocturne.png" width="112" alt="Nocturne Vault">
   <h1>Nocturne Vault</h1>
-  <p><strong>Личное зашифрованное пространство для Windows</strong></p>
-  <p>Пароли, коды доступа, заметки и файлы остаются на вашем компьютере — без аккаунта и облачного сервера.</p>
+  <p><strong>Личное зашифрованное пространство для Windows и Android</strong></p>
+  <p>Пароли, коды доступа, заметки и файлы остаются на вашем устройстве — без аккаунта и облачного сервера.</p>
   <p>
     <strong>Русский</strong>
     ·
@@ -12,6 +12,7 @@
     <a href="https://github.com/Yablloko/nocturne-vault/actions/workflows/ci.yml"><img src="https://github.com/Yablloko/nocturne-vault/actions/workflows/ci.yml/badge.svg?branch=main" alt="Статус проверки"></a>
     <img src="https://img.shields.io/badge/версия-0.8.14-313638?style=flat-square" alt="Версия 0.8.14">
     <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?style=flat-square&logo=windows11&logoColor=white" alt="Windows 10 и 11">
+    <img src="https://img.shields.io/badge/Android_preview-0.9.11-3DDC84?style=flat-square&logo=android&logoColor=white" alt="Android preview 0.9.11">
     <img src="https://img.shields.io/badge/данные-только%20локально-44625A?style=flat-square" alt="Только локальное хранение">
     <a href="LICENSE"><img src="https://img.shields.io/badge/лицензия-GPL--3.0-6B4F87?style=flat-square" alt="Лицензия GPL-3.0"></a>
   </p>
@@ -70,7 +71,9 @@ Nocturne Vault объединяет привычный файловый поря
 
 ## Установка
 
-Готовые версии для Windows публикуются в [Releases](https://github.com/Yablloko/nocturne-vault/releases). Для обновления достаточно запустить установщик новой версии поверх установленной — хранилище пользователя не удаляется.
+Готовые версии публикуются в [Releases](https://github.com/Yablloko/nocturne-vault/releases). Для обновления Windows достаточно запустить новый установщик поверх установленной версии — хранилище пользователя не удаляется.
+
+Android-сборка пока имеет статус preview. Базовое хранилище работает начиная с Android 8.0. «Защищённые приложения» требуют Android 11+, поддержку рабочего профиля прошивкой и отдельный код рабочего пространства; это системная изоляция Android, а не виртуальная машина.
 
 ### Сборка из исходников
 
@@ -89,6 +92,15 @@ pnpm dist:win
 ```
 
 Результат появится в `dist/Nocturne-Vault-Setup-0.8.14.exe`.
+
+Android-сборка требует JDK 17, Android SDK Platform 37 и запускается из PowerShell:
+
+```powershell
+cd android
+.\build-android.ps1
+```
+
+Подписанная версия создаётся локальным скриптом `android/build-release.ps1`; release-ключ намеренно не хранится в репозитории.
 
 ## Проверка проекта
 
@@ -112,6 +124,7 @@ src/
 └── services/           Шифрование, хранение, документы, TOTP и настройки
 tests/                  Функциональные и интерфейсные проверки
 build/                  Настройки Windows-установщика
+android/                Приложение Android, DPC защищённого пространства и тесты
 assets/                 Иконка приложения
 ```
 
