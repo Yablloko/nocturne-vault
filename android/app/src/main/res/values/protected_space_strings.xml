@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="protected_space_admin_label">Защищённое пространство Nocturne</string>
-    <string name="protected_space_admin_description">Изолирует приложения, закрывает их вместе с Nocturne и не разрешает доступ из личного профиля.</string>
-</resources>

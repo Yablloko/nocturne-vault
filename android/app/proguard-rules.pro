@@ -1,5 +1,0 @@
--keepattributes RuntimeVisibleAnnotations,RuntimeInvisibleAnnotations,AnnotationDefault,Signature,InnerClasses,EnclosingMethod
--allowaccessmodification
--repackageclasses 'x'
--adaptclassstrings
--dontwarn org.json.**

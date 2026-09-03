@@ -1,8 +1,8 @@
 <div align="center">
   <img src="assets/nocturne.png" width="112" alt="Nocturne Vault">
   <h1>Nocturne Vault</h1>
-  <p><strong>A private encrypted space for Windows and Android</strong></p>
-  <p>Passwords, access codes, notes, and files stay on your device — no account or cloud server required.</p>
+  <p><strong>A private encrypted space for Windows</strong></p>
+  <p>Passwords, access codes, notes, and files stay on your computer — no account or cloud server required.</p>
   <p>
     <a href="README.md">Русский</a>
     ·
@@ -12,7 +12,6 @@
     <a href="https://github.com/Yablloko/nocturne-vault/actions/workflows/ci.yml"><img src="https://github.com/Yablloko/nocturne-vault/actions/workflows/ci.yml/badge.svg?branch=main" alt="Build status"></a>
     <img src="https://img.shields.io/badge/version-0.8.14-313638?style=flat-square" alt="Version 0.8.14">
     <img src="https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4?style=flat-square&logo=windows11&logoColor=white" alt="Windows 10 and 11">
-    <img src="https://img.shields.io/badge/Android_preview-0.9.11-3DDC84?style=flat-square&logo=android&logoColor=white" alt="Android preview 0.9.11">
     <img src="https://img.shields.io/badge/data-local%20only-44625A?style=flat-square" alt="Local-only data">
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-6B4F87?style=flat-square" alt="GPL-3.0 license"></a>
   </p>
@@ -71,9 +70,7 @@ See the [security policy](SECURITY.en.md) for details.
 
 ## Installation
 
-Ready-to-use builds are published under [Releases](https://github.com/Yablloko/nocturne-vault/releases). To update on Windows, run the newer installer over the existing installation; user vault data is preserved.
-
-The Android build is currently a preview. The core vault supports Android 8.0 and newer. Protected apps require Android 11+, firmware support for managed profiles, and a separate work-space credential. This uses Android's system isolation; it is not a virtual machine.
+Ready-to-use Windows builds are published under [Releases](https://github.com/Yablloko/nocturne-vault/releases). To update, run the newer installer over the existing installation; user vault data is preserved.
 
 ### Build from source
 
@@ -92,15 +89,6 @@ pnpm dist:win
 ```
 
 The result is written to `dist/Nocturne-Vault-Setup-0.8.14.exe`.
-
-The Android build requires JDK 17 and Android SDK Platform 37. Run it from PowerShell:
-
-```powershell
-cd android
-.\build-android.ps1
-```
-
-`android/build-release.ps1` creates a signed build locally. The release signing key is intentionally never stored in the repository.
 
 ## Project checks
 
@@ -124,7 +112,6 @@ src/
 └── services/           Encryption, storage, documents, TOTP, and preferences
 tests/                  Functional and interface checks
 build/                  Windows installer configuration
-android/                Android app, protected-space DPC, and tests
 assets/                 Application icon
 ```
 
