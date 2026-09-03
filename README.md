@@ -93,7 +93,7 @@ pnpm dist:win
 
 Результат появится в `dist/Nocturne-Vault-Setup-0.8.14.exe`.
 
-Android-сборка требует JDK 17, Android SDK Platform 36 и запускается из PowerShell:
+Android-сборка требует JDK 17, Android SDK Platform 37 и запускается из PowerShell:
 
 ```powershell
 cd android

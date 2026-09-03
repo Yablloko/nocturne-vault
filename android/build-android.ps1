@@ -1,7 +1,7 @@
 $ErrorActionPreference = 'Stop'
 $sdk = if ($env:ANDROID_SDK_ROOT) { $env:ANDROID_SDK_ROOT } elseif ($env:ANDROID_HOME) { $env:ANDROID_HOME } else { Join-Path $env:LOCALAPPDATA 'Android\Sdk' }
 if (-not (Test-Path -LiteralPath $sdk)) {
-  throw "Android SDK не найден. Установите Android Studio и SDK Platform 36, затем задайте ANDROID_SDK_ROOT."
+  throw "Android SDK не найден. Установите Android Studio и SDK Platform 37, затем задайте ANDROID_SDK_ROOT."
 }
 $env:ANDROID_SDK_ROOT = $sdk
 $buildRoot = $PSScriptRoot

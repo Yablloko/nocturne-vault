@@ -91,10 +91,6 @@ class SafeDebugLogTest {
         assumeFalse(ProtectedSpaceManager.isProfileOwner(context))
         assumeTrue(ProtectedSpaceManager.isProvisioned(context))
         assumeTrue(ProtectedSpaceManager.canOpen(context))
-        // A RUNNING_LOCKED work profile is intercepted by Android's credential UI before the
-        // controller activity receives our callback. That system gate cannot be completed by an
-        // unattended instrumentation test, so exercise the end-to-end route only while unlocked.
-        assumeTrue(ProtectedSpaceManager.status(context).unlocked)
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val activity = instrumentation.startActivitySync(
             Intent(context, MainActivity::class.java)
@@ -114,7 +110,6 @@ class SafeDebugLogTest {
             }
             assertTrue(
                 state?.stage in setOf(
-                    ProtectedSpaceDeliveryTracker.STAGE_AUTHENTICATION_REQUIRED,
                     ProtectedSpaceDeliveryTracker.STAGE_SETUP_REQUIRED,
                     ProtectedSpaceDeliveryTracker.STAGE_REPAIR_READY,
                     ProtectedSpaceDeliveryTracker.STAGE_REPAIRED,
@@ -143,7 +138,6 @@ class SafeDebugLogTest {
     private fun repairRouteReachedStableState(state: ProtectedSpaceDeliveryTracker.State?): Boolean {
         if (state == null) return false
         if (state.stage in setOf(
-                ProtectedSpaceDeliveryTracker.STAGE_AUTHENTICATION_REQUIRED,
                 ProtectedSpaceDeliveryTracker.STAGE_SETUP_REQUIRED,
                 ProtectedSpaceDeliveryTracker.STAGE_REPAIRED,
                 ProtectedSpaceDeliveryTracker.STAGE_FAILED,

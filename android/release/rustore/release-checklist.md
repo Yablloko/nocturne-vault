@@ -4,7 +4,7 @@
 
 - [x] Package name: `com.nocturne.vault`.
 - [x] Версия увеличивается через `versionCode` и `versionName`.
-- [x] Минимальная версия Android 8.0, target SDK 36.
+- [x] Минимальная версия Android 8.0, target SDK 37.
 - [x] Release APK подписан постоянным RSA-4096 сертификатом.
 - [x] Подпись APK v2/v3 проходит проверку.
 - [x] Release не является debuggable.

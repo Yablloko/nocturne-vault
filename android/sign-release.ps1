@@ -6,8 +6,8 @@ $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $unsignedApk = Join-Path $PSScriptRoot 'app\build\outputs\apk\release\app-release-unsigned.apk'
 $sdk = if ($env:ANDROID_SDK_ROOT) { $env:ANDROID_SDK_ROOT } elseif ($env:ANDROID_HOME) { $env:ANDROID_HOME } else { Join-Path $env:LOCALAPPDATA 'Android\Sdk' }
-$apksigner = Join-Path $sdk 'build-tools\36.0.0\apksigner.bat'
-$zipalign = Join-Path $sdk 'build-tools\36.0.0\zipalign.exe'
+$apksigner = Join-Path $sdk 'build-tools\37.0.0\apksigner.bat'
+$zipalign = Join-Path $sdk 'build-tools\37.0.0\zipalign.exe'
 $expectedCertificateSha256 = 'f70419d3a2bb51d918a697289de4c9e231f715d06b7f6a953950640bfa6374e4'
 
 if (-not $OutputPath) { $OutputPath = Join-Path $projectRoot 'dist\Nocturne-Vault-Android-0.9.11-release.apk' }
