@@ -57,11 +57,11 @@ jobs:
           java-version: 17
           cache: gradle
 
-      - name: Установить Android SDK 37
+      - name: Установить Android SDK 36
         shell: pwsh
         run: |
           $sdkManager = Join-Path $env:ANDROID_HOME 'cmdline-tools\latest\bin\sdkmanager.bat'
-          & $sdkManager --channel=3 --install 'platforms;android-37' 'build-tools;36.0.0'
+          & $sdkManager --install 'platforms;android-36' 'build-tools;36.0.0'
 
       - name: Собрать Android и запустить unit-тесты
         working-directory: android

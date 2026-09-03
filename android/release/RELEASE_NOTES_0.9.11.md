@@ -38,7 +38,7 @@ Install this release over the previous release build. Do not uninstall the app b
 
 - Package: `com.nocturne.vault`
 - Version: `0.9.11` (`29`)
-- Min / target SDK: `26` / `37`
+- Min / target SDK: `26` / `36`
 - APK Signature Scheme: v2 + v3
-- APK SHA-256: `6FA5E07AFD93644D00D49A452F389FF66F7C5E19A86C7F18E4AA04E5A1AEC249`
+- APK SHA-256: `EF38EFAAA64BA205AA5C6A52C10EB76C7BB6BA1AF68146A56F9BA460E4D91E44`
 - Signing certificate SHA-256: `F70419D3A2BB51D918A697289DE4C9E231F715D06B7F6A953950640BFA6374E4`

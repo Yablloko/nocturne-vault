@@ -9,11 +9,11 @@ $expectedPackage = 'com.nocturne.vault'
 $expectedVersionName = '0.9.11'
 $expectedVersionCode = '29'
 $expectedMinSdk = '26'
-$expectedTargetSdk = '37'
+$expectedTargetSdk = '36'
 $expectedCertificateSha256 = 'f70419d3a2bb51d918a697289de4c9e231f715d06b7f6a953950640bfa6374e4'
 $sdk = if ($env:ANDROID_SDK_ROOT) { $env:ANDROID_SDK_ROOT } elseif ($env:ANDROID_HOME) { $env:ANDROID_HOME } else { Join-Path $env:LOCALAPPDATA 'Android\Sdk' }
 $analyzer = Join-Path $sdk 'cmdline-tools\latest\bin\apkanalyzer.bat'
-$apksigner = Join-Path $sdk 'build-tools\37.0.0\apksigner.bat'
+$apksigner = Join-Path $sdk 'build-tools\36.0.0\apksigner.bat'
 
 if (-not (Test-Path -LiteralPath $ApkPath)) { throw "APK не найден: $ApkPath" }
 if (-not (Test-Path -LiteralPath $analyzer)) { throw "Не найден apkanalyzer: $analyzer" }

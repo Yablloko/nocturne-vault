@@ -93,7 +93,7 @@ pnpm dist:win
 
 The result is written to `dist/Nocturne-Vault-Setup-0.8.14.exe`.
 
-The Android build requires JDK 17 and Android SDK Platform 37. Run it from PowerShell:
+The Android build requires JDK 17 and Android SDK Platform 36. Run it from PowerShell:
 
 ```powershell
 cd android
