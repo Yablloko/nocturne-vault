@@ -1,0 +1,32 @@
+name: Verify GiftVault visual preview
+on:
+  push:
+    branches: [giftvault-visual-demo]
+    paths:
+      - "giftvault-preview/**"
+      - ".github/workflows/verify-giftvault.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify frontend syntax and source
+        run: |
+          node --check giftvault-preview/app.js
+          test -s giftvault-preview/index.html
+          test -s giftvault-preview/style.css
+          test -s giftvault-preview/app.js
+      - name: Verify public HTTPS preview
+        run: |
+          set -euo pipefail
+          for f in index.html style.css app.js; do
+            URL="https://raw.githack.com/Yablloko/nocturne-vault/giftvault-visual-demo/giftvault-preview/$f"
+            curl --fail --location --retry 4 --retry-delay 3 --silent --show-error "$URL" --output "/tmp/$f"
+            test -s "/tmp/$f"
+            echo "Validated $f from public CDN"
+          done
+          grep -q 'GiftVault' /tmp/index.html
+          grep -q 'renderCases' /tmp/app.js
