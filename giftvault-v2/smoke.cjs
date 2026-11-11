@@ -67,12 +67,12 @@ const run=async()=>{
   await desktop.click("#editor-save");
   await desktop.evaluate(()=>document.querySelector(".desktop-nav [data-nav='home']")?.click());
   await desktop.waitForSelector("#screen-home.active");
-  assert.equal(await desktop.$eval(".case-tile",xs=>xs.length),5,"New published case in home");
+  assert.equal(await desktop.$$eval(".case-tile",xs=>xs.length),5,"New published case in home");
   await desktop.evaluate(()=>document.querySelector(".desktop-nav [data-nav='editor']")?.click());
   await desktop.$eval("#edit-title",x=>x.value='<img src=x onerror="alert(1)">');
   await desktop.click("#editor-save");
   await desktop.evaluate(()=>document.querySelector(".desktop-nav [data-nav='home']")?.click());
-  assert.equal(await desktop.$eval(".case-tile img[onerror]",xs=>xs.length),0,"Unsafe HTML title escaped");
+  assert.equal(await desktop.$$eval(".case-tile img[onerror]",xs=>xs.length),0,"Unsafe HTML title escaped");
   assert.equal(await desktop.evaluate(()=>window.hacked),undefined,"No arbitrary code execution");
   const mobile=await browser.newPage();mobile.on("pageerror",e=>errors.push(e.message));
   await mobile.setViewport({width:390,height:844,deviceScaleFactor:1});
