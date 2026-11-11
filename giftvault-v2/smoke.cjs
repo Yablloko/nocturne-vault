@@ -28,10 +28,10 @@ const run=async()=>{
   console.log("SCREENSHOT_CASE_START"+caseScreenshot.toString("base64")+"SCREENSHOT_CASE_END");
   assert.equal(await desktop.$$eval("#drops-grid .drop-card",xs=>xs.length),4,"All case drops listed");
   assert.match(await desktop.$eval("#drop-count",x=>x.textContent),/4 GIFTS/);
-  const balanceBefore=await desktop.$eval("#nav-balance",x=>Number(x.textContent.replace(/\\s/g,"")));
+  const balanceBefore=await desktop.$eval("#nav-balance",x=>Number(x.textContent.replaceAll(" ","")));
   await desktop.evaluate(()=>{document.getElementById("detail-open").click();document.getElementById("detail-open").click()});
   await desktop.waitForSelector(".reveal-overlay.show",{timeout:8000});
-  const balanceAfter=await desktop.$eval("#nav-balance",x=>Number(x.textContent.replace(/\\s/g,"")));
+  const balanceAfter=await desktop.$eval("#nav-balance",x=>Number(x.textContent.replaceAll(" ","")));
   assert.equal(balanceBefore-balanceAfter,1250,"Double-click charged only once");
   await desktop.click("#reveal-inventory");
   assert.equal(await desktop.$$eval(".item-tile",xs=>xs.length),1,"Reward added to inventory");
