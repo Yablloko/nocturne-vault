@@ -1,0 +1,23 @@
+name: Check gift asset endpoints
+on:
+  push:
+    branches: [giftvault-visual-demo]
+    paths:
+      - ".github/workflows/check-gift-assets.yml"
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test public Telegram collection images and market floor feed
+        shell: bash
+        run: |
+          for url in \
+            "https://fragment.com/file/gifts/plushpepe/thumb.webp" \
+            "https://fragment.com/file/gifts/durovscap/thumb.webp" \
+            "https://nft.fragment.com/gift/plushpepe-1.medium.jpg" \
+            "https://mrktxyz.com/assets/img/gifts/plushpepe.webp" \
+            "https://tggifts.com/data/floors-daily.json"; do
+            code=$(curl --max-time 16 -L -s -o /dev/null -w "%{http_code}" "$url" || true)
+            echo "$code $url"
+          done
