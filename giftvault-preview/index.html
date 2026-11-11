@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#090a14"/>
+<meta name="description" content="GiftVault — демонстрация интерфейса Telegram NFT-кейсов"/>
+<title>GiftVault · NFT Cases Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="./style.css"/>
+</head>
+<body>
+<div class="topbar">
+ <div class="brand" data-to="cases"><div class="brand-icon">✦</div><div class="brand-name">GIFT<span>VAULT</span><small>COLLECTIBLE CASES</small></div></div>
+ <div class="top-right"><span class="status">● DEMO</span><button class="balance" data-to="profile"><span class="coin">◈</span><b id="top-balance">10 000</b><span>CR</span><span class="balance-plus">+</span></button><button class="avatar" data-to="profile">G</button></div>
+</div>
+<div class="shell">
+<aside class="sidebar">
+ <div class="navigation">
+   <button data-to="cases" class="nav active"><span>⌂</span> Кейсы</button>
+   <button data-to="inventory" class="nav"><span>◈</span> Инвентарь <i id="inventory-badge">0</i></button>
+   <button data-to="feed" class="nav"><span>ϟ</span> Лайв-лента</button>
+   <button data-to="profile" class="nav"><span>◉</span> Профиль</button>
+   <button data-to="admin" class="nav"><span>⚙</span> Редактор кейсов</button>
+ </div>
+ <div class="side-bottom"><span class="dot"></span> ИНТЕРАКТИВНАЯ ДЕМОВЕРСИЯ <small>Без платежей и реальных NFT</small></div>
+</aside>
+<main class="main">
+<section class="page active" id="page-cases">
+ <div class="hero"><div class="hero-noise"></div><div class="hero-content"><div class="eyebrow"><span class="eyebrow-dot"></span> YOUR GIFT. YOUR LEGEND.</div><h1>ТВОЙ СЛЕДУЮЩИЙ<br/><span>РЕДКИЙ ПОДАРОК</span></h1><p>Открой тайну коллекционных подарков. Крути кейсы, собирай коллекцию, лови по-настоящему редкие находки.</p><button class="primary big" id="explore">Исследовать кейсы <span>↗</span></button><div class="hero-metrics"><div><b>8 452</b><span>ПОДАРКОВ ОТКРЫТО</span></div><div><b>1 269</b><span>КОЛЛЕКЦИОНЕРОВ</span></div></div></div><div class="hero-figure"><div class="figure-orb"></div><div class="orbit orbit1"></div><div class="orbit orbit2"></div><div class="hero-gift">🎁</div><span class="sparkle s1">✧</span><span class="sparkle s2">✦</span><span class="sparkle s3">✧</span><div class="float-pill">✦ LEGENDARY DROP</div></div></div>
+ <div class="statsline"><div><span>✦</span> ЧЕСТНАЯ МЕХАНИКА</div><div><span>◈</span> КОЛЛЕКЦИОННЫЕ ПОДАРКИ</div><div><span>↯</span> МОМЕНТАЛЬНОЕ ОТКРЫТИЕ</div></div>
+ <div class="section-title" id="cases-anchor"><div><span class="kicker">УНИКАЛЬНЫЕ КОЛЛЕКЦИИ</span><h2>Выбери свой кейс <span class="title-glint">✦</span></h2></div><span class="section-count" id="case-count">4 КЕЙСА</span></div>
+ <div class="case-grid" id="cases-grid"></div>
+ <div class="section-title lower"><div><span class="kicker">ПРОИСХОДИТ ПРЯМО СЕЙЧАС</span><h2>Последние дропы</h2></div><button class="text-link" data-to="feed">Вся лента <span>→</span></button></div>
+ <div class="feed-list" id="home-feed"></div>
+</section>
+<section class="page" id="page-inventory"><div class="page-head"><span class="kicker">ТВОИ СОКРОВИЩА</span><h1>Инвентарь <span>✦</span></h1><p>Выигранные подарки в демоверсии. Настоящая NFT-выдача отключена.</p></div><div class="inventory-grid" id="inventory-grid"></div><div class="empty-block" id="inventory-empty"><div class="empty-symbol">◇</div><h3>Коллекция ждёт первого подарка</h3><p>Открой любой кейс — и находка появится здесь.</p><button data-to="cases" class="primary">К кейсам →</button></div></section>
+<section class="page" id="page-feed"><div class="page-head"><span class="kicker">DROP ACTIVITY</span><h1>Лайв-лента <span>ϟ</span></h1><p>Анимация демонстрационных выигрышей. Данные не относятся к реальным пользователям.</p></div><div class="live-head"><span class="live-pulse"></span> LIVE DROPS <span class="muted">· тестовые события</span></div><div class="feed-list" id="all-feed"></div></section>
+<section class="page" id="page-profile"><div class="page-head"><span class="kicker">COLLECTOR PROFILE</span><h1>Мой профиль</h1></div><div class="profile-card"><div class="profile-avatar">G</div><div><span class="kicker">DEMO COLLECTOR</span><h2>Gift Explorer</h2><p>Просмотр интерфейса · тестовый аккаунт</p></div><div class="profile-level">LEVEL 01 ✦</div></div><div class="profile-metrics"><div><span>ДЕМО-БАЛАНС</span><b><span>◈</span> <span id="profile-balance">10 000</span> CR</b><small>Условные единицы, не деньги</small></div><div><span>ОТКРЫТО КЕЙСОВ</span><b id="profile-opened">0</b><small>История текущего просмотра</small></div><div><span>ПОЛУЧЕНО ПОДАРКОВ</span><b id="profile-gifts">0</b><small>Награды в инвентаре</small></div></div><div class="section-title"><div><span class="kicker">ТЕСТОВЫЕ СОБЫТИЯ</span><h2>Моя история</h2></div></div><div class="feed-list" id="history-feed"></div></section>
+<section class="page" id="page-admin"><div class="page-head"><span class="kicker">CASE STUDIO · DEMO</span><h1>Редактор кейсов <span>⚙</span></h1><p>Создание кейсов, управление призами, ценами и шансами. Изменения сохраняются только в этом браузере.</p></div><div class="editor-layout"><div class="editor-list"><div class="editor-side-title">ВАШИ КЕЙСЫ <button class="mini-button" id="new-case" title="Добавить кейс">+</button></div><div id="editor-cases"></div></div><div class="editor-workspace"><div class="editor-workspace-header"><h3>Настройки кейса</h3><span class="tag">LOCAL DEMO</span></div><div class="editor-fields"><label>Название кейса <input id="case-title" maxlength="48"/></label><label>Стоимость открытия · CR <input id="case-price" type="number" min="1" max="100000" /></label><label>Краткое описание <input id="case-desc" maxlength="120"/></label><label>Эмодзи кейса <input id="case-emoji" maxlength="8"/></label><label>Цвет оформления <input id="case-color" type="color"/></label><label>Статус <select id="case-status"><option value="1">Опубликован</option><option value="0">Скрыт</option></select></label></div><div class="editor-actions"><button class="primary" id="save-case">Сохранить кейс <span>✓</span></button><span class="editor-hint">Изменения сразу видны в каталоге</span></div><div class="section-title prize-section"><div><span class="kicker">DROP POOL</span><h2>Призы и вероятности</h2></div><button class="outline" id="add-prize">+ Добавить приз</button></div><div id="prizes-editor" class="prizes-editor"></div><div class="editor-note" id="weights-note"></div></div></div></section>
+</main>
+</div>
+<nav class="mobile-nav"><button data-to="cases" class="active"><span>⌂</span><small>Кейсы</small></button><button data-to="inventory"><span>◈</span><small>Мои NFT</small></button><button data-to="feed"><span>ϟ</span><small>Лайв</small></button><button data-to="profile"><span>◉</span><small>Профиль</small></button><button data-to="admin"><span>⚙</span><small>Редактор</small></button></nav>
+<div class="overlay" id="case-overlay" aria-hidden="true"><div class="modal"><button class="modal-close" id="close-modal" aria-label="Закрыть">×</button><div class="modal-topline">GIFTVAULT / CASE OPENING</div><h2 id="modal-title">Кейс</h2><p class="modal-sub" id="modal-desc"></p><div class="reel-stage"><div class="reel-glow"></div><div class="reel-pointer">▼</div><div class="reel-track" id="reel-track"></div><div class="reel-pointer bottom">▲</div></div><div class="result" id="result"><div class="result-heading">✦ ВАШ НОВЫЙ ПОДАРОК ✦</div><div class="result-prize" id="result-prize">🎁</div><h3 id="result-name">Подарок</h3><span id="result-value"></span></div><button class="primary open-button" id="open-case">ОТКРЫТЬ ЗА <span id="open-price">0 CR</span> <span>↗</span></button><div class="modal-note" id="modal-note">Демонстрация. Вероятности и призы не связаны с реальными активами.</div><div class="modal-prizes" id="modal-prizes"></div></div></div>
+<div class="toast" id="toast" role="status"></div><div class="confetti" id="confetti" aria-hidden="true"></div>
+<script src="./app.js" defer></script>
+</body>
+</html>
