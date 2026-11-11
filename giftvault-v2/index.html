@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090a0c">
+<meta name="description" content="GiftVault — интерфейс коллекционных Telegram Gifts, кейсы и анимация открытия (демо)">
+<title>GiftVault — Collectible Cases</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+<script defer src="./app.js"></script>
+</head>
+<body>
+<div class="top-strip"><span class="top-strip-left"><b class="tiny-square"></b> COLLECTIBLE EXPERIMENT / V2</span><span>ВИЗУАЛЬНАЯ ДЕМО-ВЕРСИЯ · БЕЗ ПЛАТЕЖЕЙ</span><span class="strip-index">GV / 002</span></div>
+<header class="header">
+ <a href="#" class="logo" data-nav="home" aria-label="GiftVault — главная"><span class="logo-mark">G<span>V</span></span><span class="logo-text">GIFT<span>VAULT</span><small>THE COLLECTION CLUB</small></span></a>
+ <nav class="desktop-nav" aria-label="Основное меню"><button data-nav="home" class="nav-link active">Коллекции</button><button data-nav="inventory" class="nav-link">Инвентарь</button><button data-nav="profile" class="nav-link">Профиль</button><button data-nav="editor" class="nav-link">Редактор <sup>DEMO</sup></button></nav>
+ <div class="header-right"><div class="demo-balance"><span class="balance-mark">◇</span><div><b id="nav-balance">10 000</b><small>DEMO CR</small></div></div><button class="header-avatar" data-nav="profile" aria-label="Профиль">G</button></div>
+</header>
+<div class="notice-line"><span class="notice-dot"></span> DEMO ENVIRONMENT <span class="notice-separator">/</span> Все выигрыши и балансы симулируются. Рыночные цены показываются отдельно, по открытым данным.</div>
+<div class="app-shell">
+<main class="screen active" id="screen-home">
+ <section class="hero">
+  <div class="hero-text">
+   <div class="eyebrow"><span class="eyebrow-line"></span> A NEW WAY TO COLLECT</div>
+   <h1>Открой <em>то,</em><br>что <span>редко.</span></h1>
+   <p>Легендарные Telegram Gifts. Искусство собирать коллекцию — одно открытие за другим.</p>
+   <div class="hero-actions"><button class="btn primary" id="hero-action">Исследовать кейсы <span aria-hidden="true">↗</span></button><span class="hero-side-note">01 / 04 <i></i> CURATED DROPS</span></div>
+  </div>
+  <div class="hero-visual" aria-hidden="true">
+    <div class="visual-grid"></div><div class="visual-ring visual-ring-one"></div><div class="visual-ring visual-ring-two"></div>
+    <div class="hero-gift hero-gift-back"><img src="https://fragment.com/file/gifts/durovscap/thumb.webp" alt=""></div>
+    <div class="hero-gift hero-gift-front"><img src="https://fragment.com/file/gifts/plushpepe/thumb.webp" alt=""></div>
+    <div class="hero-gift hero-gift-side"><img src="https://fragment.com/file/gifts/heartlocket/thumb.webp" alt=""></div>
+    <div class="hero-stamp">COLLECT<span> / </span>THE UNCOMMON <i>✳</i></div>
+  </div>
+  <span class="hero-number" aria-hidden="true">GV—01</span>
+ </section>
+
+ <section class="live-section" aria-label="Автоматическая лента демонстрационных выпадений">
+  <div class="live-top"><div class="live-heading"><span class="pulse"></span><b>DROP STREAM</b><span class="live-demo">DEMO / GENERATED</span></div><span class="live-caption">ДЕМОНСТРАЦИОННЫЕ ОТКРЫТИЯ · АВТОПРОКРУТКА</span></div>
+  <div class="live-viewport" id="live-viewport"><div class="live-track" id="live-track"></div></div>
+ </section>
+
+ <div class="section-head" id="cases-anchor"><div><span class="overline">01 — DISCOVER</span><h2>Кейсы коллекций<span class="accent-dot">.</span></h2><p>Каждая коллекция — свой характер и свои открытия.</p></div><div class="case-sort" role="group" aria-label="Фильтр кейсов"><button data-sort="all" class="sort active">Все кейсы</button><button data-sort="price" class="sort">По цене</button><button data-sort="premium" class="sort">Редкие</button></div></div>
+ <section class="cases-grid" id="cases-grid" aria-label="Каталог кейсов"></section>
+
+ <section class="market-panel"><div class="market-head"><div><span class="overline">02 — MARKET INTELLIGENCE</span><h2>Внутри коллекций</h2><p>Актуальные ориентиры минимальных цен с маркетплейса. Это не стоимость конкретного NFT.</p></div><a class="market-source" href="https://tggifts.com" target="_blank" rel="noopener noreferrer">Data: TG Gifts (tggifts.com) ↗</a></div><div class="market-grid" id="market-grid"></div><p class="market-timestamp" id="market-timestamp">Загружаем открытые котировки...</p></section>
+
+ <section class="how-section"><div class="section-head"><div><span class="overline">03 — THE EXPERIENCE</span><h2>Всё решает момент<span class="accent-dot">.</span></h2></div></div><div class="how-grid"><div><span>01 / CHOOSE</span><h3>Выбери коллекцию</h3><p>Открой любой кейс и посмотри все возможные награды и шансы.</p></div><div><span>02 / ROLL</span><h3>Поймай свой дроп</h3><p>Смотри, как настоящие Telegram Gifts пролетают через анимированную ленту.</p></div><div><span>03 / COLLECT</span><h3>Собери инвентарь</h3><p>Пополняй тестовую коллекцию. Настоящая отправка NFT в этой версии отключена.</p></div></div></section>
+</main>
+
+<main class="screen" id="screen-case">
+ <button class="back-link" id="back-home"><span>←</span> ВСЕ КЕЙСЫ <span class="back-muted">/</span> <span id="breadcrumb-title">КЕЙС</span></button>
+ <div class="case-detail-grid"><div class="detail-art"><div class="detail-art-grid"></div><span class="detail-art-label">COLLECTIBLE / EDITION</span><img id="detail-cover" src="" alt="Обложка кейса"><span class="detail-art-index" id="detail-art-index">01 / COLLECTION</span></div><div class="detail-copy"><div class="eyebrow"><span class="eyebrow-line"></span> GIFTVAULT EXCLUSIVE</div><h1 id="detail-title">Gift Case</h1><p class="detail-description" id="detail-description"></p><div class="detail-facts"><div><span>НАГРАД В КЕЙСЕ</span><b id="detail-count">04</b></div><div><span>ОТКРЫТИЕ</span><b id="detail-price">500 CR</b></div></div><div class="detail-divider"></div><p class="detail-disclaimer">Выпадение рассчитывается исключительно в деморежиме. Рыночная цена коллекции не равна цене NFT с уникальными атрибутами.</p><button class="btn primary btn-wide" id="detail-open">Открыть кейс <span id="detail-cta-price">◇ 500 CR</span></button><p class="detail-note">Тестовые кредиты. Реальные деньги не списываются.</p></div></div>
+ <section class="opening-section" id="opening-section"><div class="opening-head"><div><span class="overline">THE MOMENT</span><h2>Центр открытия <span class="accent-dot">.</span></h2></div><span id="spin-status" class="spin-status">ГОТОВ К ОТКРЫТИЮ</span></div><div class="spin-stage" id="spin-stage"><div class="spin-shade left"></div><div class="spin-shade right"></div><div class="spin-marker"></div><div class="spin-ribbon" id="spin-ribbon"></div><div class="spin-centerline"></div></div><div id="spin-hint" class="spin-hint">Нажмите «Открыть кейс» — оригинальные подарки появятся на ленте.</div></section>
+ <section class="drop-section"><div class="section-head"><div><span class="overline">POSSIBLE CONTENTS</span><h2>Что внутри<span class="accent-dot">.</span></h2><p>Каждый подарок имеет свой шанс. Цены — справочные floor-ориентиры коллекций.</p></div><span class="drop-count" id="drop-count">04 ITEMS</span></div><div class="drops-grid" id="drops-grid"></div></section>
+ <section class="case-history"><div class="section-head"><div><span class="overline">PREVIOUS DROPS</span><h2>История кейса</h2></div></div><div class="history-rows" id="case-history-rows"></div></section>
+</main>
+
+<main class="screen" id="screen-inventory">
+ <div class="section-head page-heading"><div><span class="overline">YOUR COLLECTION / 01</span><h1>Инвентарь<span class="accent-dot">.</span></h1><p>Коллекция тестовых выпадений в текущем браузере.</p></div><div class="inventory-stat"><span>ПРЕДМЕТОВ</span><b id="items-count">00</b></div></div>
+ <div class="items-grid" id="items-grid"></div><div class="empty-state" id="inventory-empty"><span class="empty-outline">◇</span><h3>Здесь пока пусто</h3><p>Начни с первого кейса. Подарки появятся тут сразу после открытия.</p><button class="btn primary" data-nav="home">Выбрать кейс <span>↗</span></button></div>
+</main>
+
+<main class="screen" id="screen-profile">
+ <div class="section-head page-heading"><div><span class="overline">ACCOUNT / DEMO</span><h1>Моя коллекция<span class="accent-dot">.</span></h1><p>Профиль локального тестового пользователя.</p></div></div>
+ <div class="profile-banner"><div class="profile-symbol">G<span>V</span></div><div class="profile-identity"><span>COLLECTOR #0001</span><h2>Gift Explorer</h2><p>Знакомство с коллекциями начинается здесь.</p></div><span class="profile-pill">DEMO ACCOUNT</span></div>
+ <div class="account-stats"><div><span>БАЛАНС / CR</span><b id="profile-balance">10 000</b><small>Тестовые кредиты</small></div><div><span>ОТКРЫТО КЕЙСОВ</span><b id="profile-open-count">0</b><small>За этот просмотр</small></div><div><span>НАХОДОК</span><b id="profile-gift-count">0</b><small>В инвентаре</small></div></div>
+ <div class="section-head"><div><span class="overline">EVENT JOURNAL</span><h2>История открытий</h2></div></div><div class="history-rows" id="profile-history"></div><button class="reset-demo" id="reset-demo">↻ Сбросить демоданные и восстановить кейсы</button>
+</main>
+
+<main class="screen" id="screen-editor">
+ <div class="section-head page-heading"><div><span class="overline">CREATOR STUDIO / LOCAL</span><h1>Case Studio<span class="accent-dot">.</span></h1><p>Редактируйте кейсы, обложки, призы и вероятности. Всё хранится локально.</p></div><span class="editor-badge">VISUAL DEMO ONLY</span></div>
+ <div class="editor-layout"><aside class="editor-sidebar"><div class="editor-sidebar-head"><b>МОИ КЕЙСЫ</b><button id="editor-new" class="add-case" title="Новый кейс" aria-label="Новый кейс">+</button></div><div id="editor-list" class="editor-list"></div></aside><section class="editor-body"><div class="editor-heading"><span class="overline">01 / CASE SETTINGS</span><h2>Основные настройки</h2></div><div class="editor-inputs"><label>Название кейса<input id="edit-title" maxlength="54" placeholder="Название"></label><label>Стоимость открытия, CR<input id="edit-price" type="number" min="1" max="999999"></label><label class="wide">Описание<textarea id="edit-desc" maxlength="260" rows="2" placeholder="Описание коллекции"></textarea></label><label>Акцент оформления<input id="edit-color" type="color"></label><label>Публикация<select id="edit-active"><option value="1">Опубликован</option><option value="0">Черновик</option></select></label></div>
+ <div class="cover-edit"><div class="cover-preview" id="cover-preview"></div><div class="cover-description"><span class="overline">CASE ARTWORK</span><h3>Своя обложка кейса</h3><p>Добавьте PNG, JPG или WebP до 3 МБ. В демо файл уменьшается и сохраняется только в браузере. Или используйте обложку из каталога.</p><div class="cover-buttons"><label class="btn outline">Загрузить изображение<input id="cover-upload" type="file" accept="image/png,image/jpeg,image/webp" hidden></label><button id="cover-reset" class="btn ghost">Вернуть стандартную</button></div></div></div>
+ <div class="editor-heading prize-heading"><span class="overline">02 / DROP CONFIGURATION</span><div class="editor-heading-row"><h2>Состав кейса</h2><button class="btn outline" id="editor-add-gift">+ Добавить подарок</button></div></div><div class="prizes-table" id="editor-prizes"></div><div class="editor-weight-note" id="editor-weight-note"></div><div class="editor-footer"><button class="btn primary" id="editor-save">Сохранить изменения <span>↗</span></button><span>Награды и цены — только для демонстрации</span></div></section></div>
+</main>
+</div>
+<footer class="footer"><div class="footer-brand">GIFT<span>VAULT</span> <small>CURATED COLLECTIONS</small></div><p>Не связано с Telegram или Fragment. Визуальное демо без финансовых операций, NFT-трансферов и настоящих пользователей.</p><span>© 2026 / GV—002</span></footer>
+<nav class="mobile-tabs" aria-label="Мобильная навигация"><button data-nav="home" class="active"><span>▦</span><small>Кейсы</small></button><button data-nav="inventory"><span>◇</span><small>Подарки</small></button><button data-nav="profile"><span>◉</span><small>Профиль</small></button><button data-nav="editor"><span>☷</span><small>Редактор</small></button></nav>
+<div class="reveal-overlay" id="reveal-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="reveal-name">
+ <div class="reveal-panel"><button class="reveal-close" id="reveal-close" aria-label="Закрыть">×</button><span class="overline">COLLECTIBLE UNLOCKED / DEMO</span><div class="reveal-halo"><img id="reveal-image" alt="Выигранный Telegram gift"></div><div class="reveal-rarity" id="reveal-rarity">COLLECTIBLE</div><h2 id="reveal-name">Новый подарок</h2><div class="reveal-price" id="reveal-price">Floor: нет данных</div><p>Добавлен в тестовый инвентарь. Настоящие NFT не отправляются.</p><div class="reveal-actions"><button class="btn outline" id="reveal-again">Ещё раз</button><button class="btn primary" id="reveal-inventory">В инвентарь ↗</button></div></div>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div><div id="particle-layer" class="particle-layer" aria-hidden="true"></div>
+</body>
+</html>
