@@ -33,6 +33,8 @@ const run=async()=>{
   const balanceBefore=await desktop.$eval("#nav-balance",x=>Number(x.textContent.replace(/\s/g,"").replace(",",".")));
   await desktop.evaluate(()=>{document.getElementById("detail-open").click();document.getElementById("detail-open").click()});
   await desktop.waitForSelector(".reveal-overlay.show",{timeout:8000});
+  const revealShot=await desktop.screenshot({type:"jpeg",quality:72});
+  console.log("SCREENSHOT_REVEAL_START"+revealShot.toString("base64")+"SCREENSHOT_REVEAL_END");
   const balanceAfter=await desktop.$eval("#nav-balance",x=>Number(x.textContent.replace(/\s/g,"").replace(",",".")));
   assert(Math.abs((balanceBefore-balanceAfter)-1.25)<0.00001,"Double-click charged only once at 1.25 test TON");
   await desktop.click("#reveal-inventory");
