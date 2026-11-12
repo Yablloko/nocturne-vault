@@ -1,0 +1,42 @@
+name: GiftVault v3 browser QA
+on:
+  push:
+    branches: [giftvault-visual-demo]
+    paths:
+      - "giftvault-v3/**"
+      - ".github/workflows/qa-giftvault-v3.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate browser JavaScript syntax
+        run: |
+          node --check giftvault-v3/app.js
+          node --check giftvault-v3/smoke.cjs
+      - name: Install headless browser harness
+        run: |
+          mkdir -p /tmp/gv-browser
+          npm install --prefix /tmp/gv-browser --no-audit --no-fund puppeteer-core@24.15.0
+          which google-chrome || which google-chrome-stable || which chromium
+      - name: End-to-end interaction smoke test
+        env:
+          NODE_PATH: /tmp/gv-browser/node_modules
+          CHROME_BIN: /usr/bin/google-chrome
+        run: node giftvault-v3/smoke.cjs
+      - name: Verify asset and pricing feeds
+        run: |
+          set -euo pipefail
+          for url in \
+            https://fragment.com/file/gifts/plushpepe/thumb.webp \
+            https://fragment.com/file/gifts/heartlocket/thumb.webp \
+            https://fragment.com/file/gifts/sakuraflower/thumb.webp \
+            https://fragment.com/file/gifts/scaredcat/thumb.webp \
+            https://tggifts.com/data/floors-daily.json; do
+            curl --fail -L --max-time 25 --silent --show-error "$url" -o /dev/null
+            echo "OK $url"
+          done
