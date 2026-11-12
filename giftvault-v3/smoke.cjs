@@ -29,7 +29,7 @@ const run=async()=>{
   const caseScreenshot=await desktop.screenshot({type:"jpeg",quality:64});
   console.log("SCREENSHOT_CASE_START"+caseScreenshot.toString("base64")+"SCREENSHOT_CASE_END");
   assert.equal(await desktop.$$eval("#drops-grid .drop-card",xs=>xs.length),4,"All case drops listed");
-  assert.match(await desktop.$eval("#drop-count",x=>x.textContent),/4 GIFTS/);
+  assert.match(await desktop.$eval("#drop-count",x=>x.textContent),/4 подарка/);
   const balanceBefore=await desktop.$eval("#nav-balance",x=>Number(x.textContent.replace(/\s/g,"").replace(",",".")));
   await desktop.evaluate(()=>{document.getElementById("detail-open").click();document.getElementById("detail-open").click()});
   await desktop.waitForSelector(".reveal-overlay.show",{timeout:8000});
