@@ -75,7 +75,9 @@ const run=async()=>{
   await desktop.evaluate(()=>document.querySelector(".desktop-nav [data-nav='home']")?.click());
   assert.equal(await desktop.$$eval(".case-tile img[onerror]",xs=>xs.length),0,"Unsafe HTML title escaped");
   assert.equal(await desktop.evaluate(()=>window.hacked),undefined,"No arbitrary code execution");
-  // The editor upload test deliberately stored a white 1px test cover; reset before visual baseline screenshot.\n  await desktop.evaluate(()=>localStorage.clear());\n  const mobile=await browser.newPage();mobile.on("pageerror",e=>errors.push(e.message));
+  // The editor upload test deliberately stored a white 1px test cover; reset before visual baseline screenshot.
+  await desktop.evaluate(()=>localStorage.clear());
+  const mobile=await browser.newPage();mobile.on("pageerror",e=>errors.push(e.message));
   await mobile.setViewport({width:390,height:844,deviceScaleFactor:1});
   await mobile.goto("http://127.0.0.1:8766/index.html",{waitUntil:"domcontentloaded"});
   await mobile.waitForSelector(".case-tile");
