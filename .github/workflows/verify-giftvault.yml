@@ -30,6 +30,9 @@ jobs:
           done
           grep -q 'class="home-intro"' /tmp/index.html
           grep -q 'syncFloors' /tmp/app.js
-          grep -q 'GiftVault v3' giftvault-preview/README.md
-          echo 'Verified v3 visuals are served from the legacy HTTPS URL'
+          grep -q 'fixed-price TON demo' giftvault-preview/README.md
+          grep -q 'giftvault_v4_fixed_gift_prices' /tmp/app.js
+          grep -q 'Фиксированная стоимость' /tmp/index.html
+          test -s giftvault-preview/assets/plushpepe.jpg
+          echo 'Verified TON fixed-price gift preview is served from HTTPS'
 
