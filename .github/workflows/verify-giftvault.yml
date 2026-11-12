@@ -23,7 +23,7 @@ jobs:
         run: |
           set -euo pipefail
           for f in index.html style.css app.js; do
-            URL="https://raw.githack.com/Yablloko/nocturne-vault/giftvault-visual-demo/giftvault-preview/$f"
+            URL="https://raw.githack.com/Yablloko/nocturne-vault/${GITHUB_SHA}/giftvault-preview/$f"
             curl --fail --location --retry 4 --retry-delay 3 --silent --show-error "$URL" --output "/tmp/$f"
             test -s "/tmp/$f"
             echo "Validated $f from public CDN"
