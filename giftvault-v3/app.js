@@ -79,7 +79,7 @@ document.querySelectorAll("[data-sort]").forEach(b=>b.addEventListener("click",(
 const examples=[
  ["Игрок #014","plushpepe","Пепе и друзья"],["Игрок #021","durovscap","Тёмная лошадка"],["Игрок #008","heartlocket","С любовью"],["Игрок #006","sakuraflower","Кот в мешке"],["Игрок #031","diamondring","Пепе и друзья"],["Игрок #009","scaredcat","Кот в мешке"],["Игрок #018","lootbag","Тёмная лошадка"],["Игрок #017","preciouspeach","С любовью"]
 ];
-function feedItem([name,slug,c]){return '<div class="live-item">'+imageMarkup(slug,"live-img",gif(slug).name)+'<div class="live-name"><b>'+e(name)+'</b><small>'+e(gif(slug).name)+'</small></div><div class="live-price">'+(prices[slug]?e(floor(slug)):"—")+'<span>'+e(c)+'</span></div></div>'}
+function feedItem([name,slug,c]){return '<div class="live-item">'+imageMarkup(slug,"live-img",gif(slug).name)+'<div class="live-name"><b>'+e(name)+'</b><small>'+e(gif(slug).name)+'</small></div><div class="live-price">'+e(floor(slug))+'<span>'+e(c)+'</span></div></div>'}
 function renderLive(){const rows=examples.map(feedItem).join("");$("live-track").innerHTML='<div class="live-group">'+rows+'</div><div class="live-group" aria-hidden="true">'+rows+'</div>'}
 function renderMarket(){const ids=["plushpepe","durovscap","heartlocket","diamondring"];$("market-grid").innerHTML=ids.map(slug=>'<div class="market-item">'+imageMarkup(slug,"",gif(slug).name)+'<div><strong>'+e(gif(slug).name)+'</strong><b>'+e(floor(slug))+'</b></div></div>').join("");$("market-timestamp").textContent="Фиксированный прайс-лист. Цены задаются вручную администратором и не меняются вслед за рынком. В демо TON условные: реальные платежи отключены."}
 function syncFloors(){renderMarket();renderLive()}
