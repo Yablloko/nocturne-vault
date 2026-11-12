@@ -15,7 +15,7 @@ const run=async()=>{
   const errors=[];desktop.on("pageerror",e=>errors.push(e.message));
   await desktop.goto("http://127.0.0.1:8766/index.html",{waitUntil:"domcontentloaded"});
   await desktop.waitForSelector(".case-tile",{timeout:10000});
-  assert.equal(await desktop.$eval(".case-tile",xs=>xs.length),4,"Four case tiles");
+  assert.equal(await desktop.$$eval(".case-tile",xs=>xs.length),4,"Four case tiles");
   assert.equal(await desktop.$eval(".live-track",x=>getComputedStyle(x).animationName),"marquee","Live ticker is animated");
   await sleep(1700);
   let imgStatus=await desktop.$eval(".case-tile img",x=>({complete:x.complete,width:x.naturalWidth,src:x.src}));
