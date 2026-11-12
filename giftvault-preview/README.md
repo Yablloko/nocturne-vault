@@ -1,12 +1,9 @@
-# GiftVault v3 - visual-only collectible cases demo
+# GiftVault — fixed-price TON demo
 
-Public HTTPS preview: https://raw.githack.com/Yablloko/nocturne-vault/giftvault-visual-demo/giftvault-preview/index.html
+Open: https://raw.githack.com/Yablloko/nocturne-vault/giftvault-visual-demo/giftvault-preview/index.html
 
-## Changes
-- Redesigned from promotional landing to compact Telegram-inspired marketplace layout
-- Onest + IBM Plex Mono typography, dark neutral surfaces and restrained Telegram-blue accent
-- Bundled high-resolution 640x640 original Telegram collectible photos downloaded and verified from Fragment (12 images). No more 128px upscaling or CDN loading delays.
-- Auto-scrolling demo feed on the home page, case detail, reel, inventory and case-cover editing
-- Prices are data from https://tggifts.com (collection floor only), with attribution and missing-data states
+This public static demo displays **simulated TON**, NOT real blockchain balances. Gift valuations and case-opening costs are stored as local fixed milliTON numbers, editable from local Case Studio. No live marketplace price is used for public display.
 
-Security: front-end demo uses no bot tokens, real funds, NFT delivery or authenticated user data. Demo credits and feed are mock-only.
+Shared gift prices apply to all cases. Editor publication is prevented at theoretical RTP above 90%, and raising gift valuation beyond this threshold pauses affected cases. This is demo-side logic, **not secure server-side risk control** and not a guarantee of profit. The real system must also account for procurement prices, stock, fees, reserves and rules of Telegram.
+
+Original 640x640 collectible images are available locally in assets/. Opening, rewards, inventory, editor and feed are demonstrations only. No user authentication, payments or NFT delivery.
