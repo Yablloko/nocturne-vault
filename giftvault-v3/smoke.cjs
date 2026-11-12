@@ -15,6 +15,7 @@ const run=async()=>{
   const errors=[];desktop.on("pageerror",e=>errors.push(e.message));
   await desktop.goto("http://127.0.0.1:8766/index.html",{waitUntil:"domcontentloaded"});
   await desktop.waitForSelector(".case-tile",{timeout:10000});
+  assert.match(await desktop.$eval(".market-item b",x=>x.textContent),/5 TON/,"Fixed admin price is visible");
   assert.equal(await desktop.$$eval(".case-tile",xs=>xs.length),4,"Four case tiles");
   assert.equal(await desktop.$eval(".live-track",x=>getComputedStyle(x).animationName),"marquee","Live ticker is animated");
   await sleep(1700);
@@ -29,11 +30,11 @@ const run=async()=>{
   console.log("SCREENSHOT_CASE_START"+caseScreenshot.toString("base64")+"SCREENSHOT_CASE_END");
   assert.equal(await desktop.$$eval("#drops-grid .drop-card",xs=>xs.length),4,"All case drops listed");
   assert.match(await desktop.$eval("#drop-count",x=>x.textContent),/4 GIFTS/);
-  const balanceBefore=await desktop.$eval("#nav-balance",x=>Number(Array.from(x.textContent).filter(c=>c>="0"&&c<="9").join("")));
+  const balanceBefore=await desktop.$eval("#nav-balance",x=>Number(x.textContent.replace(/\s/g,"").replace(",",".")));
   await desktop.evaluate(()=>{document.getElementById("detail-open").click();document.getElementById("detail-open").click()});
   await desktop.waitForSelector(".reveal-overlay.show",{timeout:8000});
-  const balanceAfter=await desktop.$eval("#nav-balance",x=>Number(Array.from(x.textContent).filter(c=>c>="0"&&c<="9").join("")));
-  assert.equal(balanceBefore-balanceAfter,1250,"Double-click charged only once");
+  const balanceAfter=await desktop.$eval("#nav-balance",x=>Number(x.textContent.replace(/\s/g,"").replace(",",".")));
+  assert(Math.abs((balanceBefore-balanceAfter)-1.25)<0.00001,"Double-click charged only once at 1.25 test TON");
   await desktop.click("#reveal-inventory");
   assert.equal(await desktop.$$eval(".item-tile",xs=>xs.length),1,"Reward added to inventory");
   await desktop.click('[data-nav="editor"].mobile-tabs button').catch(()=>{});
@@ -59,11 +60,14 @@ const run=async()=>{
   await sleep(800);
   const imageUploaded=await desktop.$eval("#cover-preview img",x=>x.src.startsWith("data:image/webp"));
   assert(imageUploaded,"Valid image processed and previewed");
+  // Admin controls the fixed price; the market display must follow the same local catalogue.
+  await desktop.$eval('input[data-gift-value="durovscap"]',el=>{el.value="2.5";el.dispatchEvent(new Event("change",{bubbles:true}))});
+  assert.match(await desktop.$eval(".market-item:nth-child(2) b",x=>x.textContent),/2,5 TON/,"Admin edits shared gift price without market fetching");
   await desktop.click("#editor-new");
   await desktop.type("#edit-title","ARCHIVE / ZERO");
   await desktop.$eval("#edit-title",x=>x.value="ARCHIVE / ZERO");
   await desktop.$eval("#edit-desc",x=>x.value="Sample case artwork");
-  await desktop.$eval("#edit-price",x=>x.value="375");
+  await desktop.$eval("#edit-price",x=>x.value="0.375");
   await desktop.select("#edit-active","1");
   await desktop.click("#editor-save");
   await desktop.evaluate(()=>document.querySelector(".desktop-nav [data-nav='home']")?.click());
@@ -77,6 +81,12 @@ const run=async()=>{
   assert.equal(await desktop.evaluate(()=>window.hacked),undefined,"No arbitrary code execution");
   // The editor upload test deliberately stored a white 1px test cover; reset before visual baseline screenshot.
   await desktop.evaluate(()=>localStorage.clear());
+  // Publishing a case below expected prize cost must be refused by economy guard.
+  await desktop.evaluate(()=>document.querySelector(".desktop-nav [data-nav='editor']")?.click());
+  await desktop.$eval("#edit-price",el=>el.value="0.001");
+  await desktop.select("#edit-active","1");
+  await desktop.click("#editor-save");
+  assert.match(await desktop.$eval("#toast",x=>x.textContent),/RTP выше 90%/,"Unprofitable case blocked");
   const mobile=await browser.newPage();mobile.on("pageerror",e=>errors.push(e.message));
   await mobile.setViewport({width:390,height:844,deviceScaleFactor:1});
   await mobile.goto("http://127.0.0.1:8766/index.html",{waitUntil:"domcontentloaded"});
