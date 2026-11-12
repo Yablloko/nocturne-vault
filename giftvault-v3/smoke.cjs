@@ -40,6 +40,8 @@ const run=async()=>{
   await desktop.click('[data-nav="editor"].mobile-tabs button').catch(()=>{});
   await desktop.evaluate(()=>document.querySelector(".desktop-nav [data-nav='editor']")?.click());
   await desktop.waitForSelector("#screen-editor.active");
+  assert.equal(await desktop.$eval("#edit-price",el=>el.value),"1.25","Case price editor must display decimal TON correctly");
+  assert.equal(await desktop.$eval('input[data-gift-value="plushpepe"]',el=>el.value),"5","Fixed gift prices must populate numeric fields");
   const editorScreenshot=await desktop.screenshot({type:"jpeg",quality:66});
   console.log("SCREENSHOT_EDITOR_START"+editorScreenshot.toString("base64")+"SCREENSHOT_EDITOR_END");
   const negative=await desktop.evaluate(()=>{
