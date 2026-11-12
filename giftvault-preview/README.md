@@ -1,7 +1,12 @@
-# GiftVault v2 - verified HTTPS visual demo
+# GiftVault v3 - visual-only collectible cases demo
 
-Live preview: https://raw.githack.com/Yablloko/nocturne-vault/giftvault-visual-demo/giftvault-preview/index.html
+Public HTTPS preview: https://raw.githack.com/Yablloko/nocturne-vault/giftvault-visual-demo/giftvault-preview/index.html
 
-Source preview: `giftvault-v2/`. The static clone here preserves the older stable URL. Responsive premium UI, original Telegram collectible images, an automatically scrolling demo ticker, market floor snapshots from https://tggifts.com/data/floors-daily.json, a full case detail and reel, inventory, and browser-local case cover upload/editor.
+## Changes
+- Redesigned from promotional landing to compact Telegram-inspired marketplace layout
+- Onest + IBM Plex Mono typography, dark neutral surfaces and restrained Telegram-blue accent
+- Bundled high-resolution 640x640 original Telegram collectible photos downloaded and verified from Fragment (12 images). No more 128px upscaling or CDN loading delays.
+- Auto-scrolling demo feed on the home page, case detail, reel, inventory and case-cover editing
+- Prices are data from https://tggifts.com (collection floor only), with attribution and missing-data states
 
-This is a visual prototype: no Telegram bot token, real transactions, or NFT transfers. Displayed credits and ticker user events are demo-only. Collection floor is not an exact appraisal of an individual NFT. Data attribution: TG Gifts (tggifts.com), CC BY 4.0.
+Security: front-end demo uses no bot tokens, real funds, NFT delivery or authenticated user data. Demo credits and feed are mock-only.
