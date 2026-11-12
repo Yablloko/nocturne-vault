@@ -4,7 +4,7 @@ const $=id=>document.getElementById(id);
 const e=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fmt=n=>Number(n||0).toLocaleString("ru-RU",{maximumFractionDigits:2});
 const clone=v=>JSON.parse(JSON.stringify(v));
-const image=slug=>"https://nft.fragment.com/gift/"+encodeURIComponent(slug)+"-1.large.jpg";
+const image=slug=>"./assets/"+encodeURIComponent(slug)+".jpg";
 const knownGifts=[
  {slug:"plushpepe",name:"Plush Pepe",type:"ICONIC"},
  {slug:"durovscap",name:"Durov’s Cap",type:"PREMIUM"},
@@ -21,10 +21,10 @@ const knownGifts=[
 ];
 const bySlug=Object.fromEntries(knownGifts.map(g=>[g.slug,g]));
 const baseCases=[
- {id:"origin",name:"Первая коллекция",desc:"Культовые коллекционные подарки, с которых начинается особенная история.",price:1250,cover:"plushpepe",customCover:"",color:"#adbb70",category:"ПОДБОРКА",active:true,prizes:[{slug:"plushpepe",weight:4},{slug:"durovscap",weight:11},{slug:"heartlocket",weight:17},{slug:"diamondring",weight:68}]},
- {id:"signal",name:"Классика",desc:"Артефакты цифровой эпохи. Сдержанно, необычно, коллекционно.",price:680,cover:"durovscap",customCover:"",color:"#9ca7ad",category:"ПОПУЛЯРНЫЙ",active:true,prizes:[{slug:"durovscap",weight:4},{slug:"swisswatch",weight:15},{slug:"lootbag",weight:26},{slug:"signetring",weight:55}]},
- {id:"heart",name:"Эмоции",desc:"Вещи, которые остаются с тобой. Редкие находки с характером.",price:390,cover:"heartlocket",customCover:"",color:"#b08a88",category:"НОВОЕ",active:true,prizes:[{slug:"heartlocket",weight:4},{slug:"preciouspeach",weight:8},{slug:"sakuraflower",weight:28},{slug:"icecream",weight:60}]},
- {id:"lucky",name:"На удачу",desc:"Небольшой вход, необычный результат. Для любителей неожиданных дропов.",price:220,cover:"scaredcat",customCover:"",color:"#8299ac",category:"НА КАЖДЫЙ ДЕНЬ",active:true,prizes:[{slug:"scaredcat",weight:3},{slug:"lootbag",weight:12},{slug:"sakuraflower",weight:29},{slug:"bdaycandle",weight:56}]}
+ {id:"origin",name:"Пепе и друзья",desc:"Культовые коллекционные подарки, с которых начинается особенная история.",price:1250,cover:"plushpepe",customCover:"",color:"#adbb70",category:"ПОДБОРКА",active:true,prizes:[{slug:"plushpepe",weight:4},{slug:"durovscap",weight:11},{slug:"heartlocket",weight:17},{slug:"diamondring",weight:68}]},
+ {id:"signal",name:"Тёмная лошадка",desc:"Артефакты цифровой эпохи. Сдержанно, необычно, коллекционно.",price:680,cover:"durovscap",customCover:"",color:"#9ca7ad",category:"ПОПУЛЯРНЫЙ",active:true,prizes:[{slug:"durovscap",weight:4},{slug:"swisswatch",weight:15},{slug:"lootbag",weight:26},{slug:"signetring",weight:55}]},
+ {id:"heart",name:"С любовью",desc:"Вещи, которые остаются с тобой. Редкие находки с характером.",price:390,cover:"heartlocket",customCover:"",color:"#b08a88",category:"НОВОЕ",active:true,prizes:[{slug:"heartlocket",weight:4},{slug:"preciouspeach",weight:8},{slug:"sakuraflower",weight:28},{slug:"icecream",weight:60}]},
+ {id:"lucky",name:"Кот в мешке",desc:"Небольшой вход, необычный результат. Для любителей неожиданных дропов.",price:220,cover:"scaredcat",customCover:"",color:"#8299ac",category:"НА КАЖДЫЙ ДЕНЬ",active:true,prizes:[{slug:"scaredcat",weight:3},{slug:"lootbag",weight:12},{slug:"sakuraflower",weight:29},{slug:"bdaycandle",weight:56}]}
 ];
 const keys={cases:"gv2_cases",balance:"gv2_balance",inventory:"gv2_inventory",history:"gv2_history"};
 function read(key,def){try{const value=JSON.parse(localStorage.getItem(key));return value===null?def:value}catch{return def}}
@@ -47,7 +47,7 @@ validCases();
 function gif(slug){return bySlug[slug]||{slug,name:slug.replace(/[^\w-]/g,"").slice(0,40),type:"GIFT"}}
 function floor(slug){let p=prices[slug];return p&&Number.isFinite(p.value)&&p.value>0?fmt(p.value)+" GRAM":"нет данных"}
 function floorDate(slug){return prices[slug]?.date||null}
-function imageError(evt){const img=evt.target;if(!(img instanceof HTMLImageElement)||!img.dataset.gift)return;const slug=img.dataset.gift;if(!/^[a-z0-9]+$/.test(slug))return;const tries=Number(img.dataset.retry||0);if(tries===0){img.dataset.retry="1";img.src="https://nft.fragment.com/gift/"+slug+"-1.medium.jpg"}else if(tries===1){img.dataset.retry="2";img.src="https://fragment.com/file/gifts/"+slug+"/thumb.webp"}else{img.dataset.retry="3";img.style.opacity=".12";img.alt="Изображение недоступно"}}
+function imageError(evt){const img=evt.target;if(!(img instanceof HTMLImageElement)||!img.dataset.gift)return;const slug=img.dataset.gift;if(!/^[a-z0-9]+$/.test(slug))return;const tries=Number(img.dataset.retry||0);if(tries===0){img.dataset.retry="1";img.src="https://nft.fragment.com/gift/"+slug+"-1.large.jpg"}else if(tries===1){img.dataset.retry="2";img.src="https://nft.fragment.com/gift/"+slug+"-1.medium.jpg"}else if(tries===2){img.dataset.retry="3";img.src="https://fragment.com/file/gifts/"+slug+"/thumb.webp"}else{img.dataset.retry="4";img.style.opacity=".12";img.alt="Изображение недоступно"}}
 document.addEventListener("error",imageError,true);
 function rand(){const arr=new Uint32Array(1);if(crypto&&crypto.getRandomValues){crypto.getRandomValues(arr);return arr[0]/4294967296}return Math.random()}
 function choose(items){const active=items.filter(x=>Number.isFinite(Number(x.weight))&&Number(x.weight)>0&&bySlug[x.slug]);const sum=active.reduce((n,p)=>n+Number(p.weight),0);if(!sum)return null;let roll=rand()*sum;for(const prize of active){roll-=Number(prize.weight);if(roll<0)return prize}return active[active.length-1]}
@@ -66,7 +66,7 @@ function renderCases(){const rows=activeCases();$("cases-grid").innerHTML=rows.m
 function safeColor(c){return /^#[0-9A-Fa-f]{6}$/.test(c||"")?c:"#9da980"}
 document.querySelectorAll("[data-sort]").forEach(b=>b.addEventListener("click",()=>{filter=b.dataset.sort;document.querySelectorAll("[data-sort]").forEach(x=>x.classList.toggle("active",x===b));renderCases()}));
 const examples=[
- ["Игрок #014","plushpepe","Первая коллекция"],["Игрок #021","durovscap","Классика"],["Игрок #008","heartlocket","Эмоции"],["Игрок #006","sakuraflower","На удачу"],["Игрок #031","diamondring","Первая коллекция"],["Игрок #009","scaredcat","На удачу"],["Игрок #018","lootbag","Классика"],["Игрок #017","preciouspeach","Эмоции"]
+ ["Игрок #014","plushpepe","Пепе и друзья"],["Игрок #021","durovscap","Тёмная лошадка"],["Игрок #008","heartlocket","С любовью"],["Игрок #006","sakuraflower","Кот в мешке"],["Игрок #031","diamondring","Пепе и друзья"],["Игрок #009","scaredcat","Кот в мешке"],["Игрок #018","lootbag","Тёмная лошадка"],["Игрок #017","preciouspeach","С любовью"]
 ];
 function feedItem([name,slug,c]){return '<div class="live-item">'+imageMarkup(slug,"live-img",gif(slug).name)+'<div class="live-name"><b>'+e(name)+' · TEST</b><small>'+e(gif(slug).name)+'</small></div><div class="live-price">'+(prices[slug]?e(floor(slug)):"—")+'<span>'+e(c)+'</span></div></div>'}
 function renderLive(){const rows=examples.map(feedItem).join("");$("live-track").innerHTML='<div class="live-group">'+rows+'</div><div class="live-group" aria-hidden="true">'+rows+'</div>'}
