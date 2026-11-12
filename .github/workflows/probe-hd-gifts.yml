@@ -1,0 +1,31 @@
+name: Probe high-resolution Telegram collectible media
+on:
+  push:
+    branches: [giftvault-visual-demo]
+    paths: [".github/workflows/probe-hd-gifts.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect image formats and actual dimensions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --user -q pillow
+          python3 - <<'PY'
+          import io, urllib.request
+          from PIL import Image
+          slugs=['plushpepe','durovscap','heartlocket','diamondring','lootbag','sakuraflower','scaredcat','swisswatch','signetring','preciouspeach','icecream','bdaycandle']
+          for slug in slugs:
+            for variant,url in [('thumb',f'https://fragment.com/file/gifts/{slug}/thumb.webp'),('large1',f'https://nft.fragment.com/gift/{slug}-1.large.jpg'),('medium1',f'https://nft.fragment.com/gift/{slug}-1.medium.jpg')]:
+              try:
+                req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+                with urllib.request.urlopen(req,timeout=12) as resp:
+                  raw=resp.read()
+                im=Image.open(io.BytesIO(raw))
+                print(f'ASSET {slug} {variant} {im.width}x{im.height} {len(raw)} bytes {url}',flush=True)
+              except Exception as e: print(f'ASSET {slug} {variant} FAILED {str(e)[:120]}',flush=True)
+          PY
