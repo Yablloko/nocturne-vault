@@ -28,7 +28,8 @@ jobs:
             test -s "/tmp/$f"
             echo "Validated $f from public CDN"
           done
-          grep -q 'DROP STREAM' /tmp/index.html
+          grep -q 'Кейсы Telegram Gifts' /tmp/index.html
           grep -q 'syncFloors' /tmp/app.js
-          grep -q 'giftvault-v2' giftvault-preview/README.md
-          echo 'Verified v2 visuals are served from the legacy HTTPS URL'
+          grep -q 'GiftVault v3' giftvault-preview/README.md
+          echo 'Verified v3 visuals are served from the legacy HTTPS URL'
+
